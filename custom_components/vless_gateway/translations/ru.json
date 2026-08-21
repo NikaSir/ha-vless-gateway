@@ -1,0 +1,36 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Подключение VLESS Gateway",
+        "description": "Подключение к документированному локальному API управления.",
+        "data": {
+          "base_url": "URL API шлюза",
+          "token": "Токен API"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Не удалось подключиться к шлюзу",
+      "invalid_auth": "Шлюз отклонил учетные данные"
+    },
+    "abort": {
+      "already_configured": "Этот шлюз уже настроен"
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "tunnel_connected": {"name": "Туннель подключен"}
+    },
+    "button": {
+      "refresh": {"name": "Обновить сейчас"}
+    },
+    "sensor": {
+      "active_route": {"name": "Активный маршрут"},
+      "uptime": {"name": "Время работы"},
+      "latency": {"name": "Задержка туннеля"},
+      "rx_bytes": {"name": "Получено через туннель"},
+      "tx_bytes": {"name": "Передано через туннель"}
+    }
+  }
+}

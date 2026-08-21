@@ -1,0 +1,36 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Connect VLESS Gateway",
+        "description": "Connect to the documented local management API.",
+        "data": {
+          "base_url": "Gateway API URL",
+          "token": "API token"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Failed to connect to the gateway",
+      "invalid_auth": "Gateway rejected the credentials"
+    },
+    "abort": {
+      "already_configured": "This gateway is already configured"
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "tunnel_connected": {"name": "Tunnel connected"}
+    },
+    "button": {
+      "refresh": {"name": "Refresh now"}
+    },
+    "sensor": {
+      "active_route": {"name": "Active route"},
+      "uptime": {"name": "Uptime"},
+      "latency": {"name": "Tunnel latency"},
+      "rx_bytes": {"name": "Tunnel received"},
+      "tx_bytes": {"name": "Tunnel transmitted"}
+    }
+  }
+}
