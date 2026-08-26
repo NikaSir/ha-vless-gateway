@@ -42,6 +42,24 @@ jobs:
             python -m compileall -q custom_components
           fi
 
+      - name: Validate approved repository icon
+        run: |
+          python - <<'PY'
+          import struct
+          from pathlib import Path
+
+          path = Path('assets/icon.png')
+          data = path.read_bytes()
+          if data[:8] != b'\x89PNG\r\n\x1a\n':
+              raise SystemExit('assets/icon.png is not a PNG')
+          width, height = struct.unpack('>II', data[16:24])
+          if (width, height) != (512, 512):
+              raise SystemExit(f'Unexpected repository icon size: {(width, height)}')
+          if data[25] not in (4, 6):
+              raise SystemExit('Repository icon has no alpha channel')
+          print('Repository icon OK: 512x512 with alpha')
+          PY
+
       - name: Reject tracked credential/key files
         shell: bash
         run: |
