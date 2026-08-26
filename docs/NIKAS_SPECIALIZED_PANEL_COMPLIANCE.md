@@ -6,7 +6,7 @@
 
 ## Summary
 
-This repository is intentionally a bootstrap. README states that the Home Assistant integration will be introduced only after the gateway management API is defined and verified. Therefore the synchronized standard is present, but every runtime-specific item remains a GAP rather than an unverified PASS.
+This repository is intentionally a bootstrap. README states that the Home Assistant integration will be introduced only after the gateway management API is defined and verified. Therefore the synchronized standard and approved repository identity are present, while every runtime-specific item remains a GAP rather than an unverified PASS.
 
 ## Compliance
 
@@ -20,9 +20,9 @@ This repository is intentionally a bootstrap. README states that the Home Assist
 | Permanent HA menu left / internal parent navigation | GAP | No runtime. Future Header must always emit composed/bubbling `hass-toggle-menu`; Back belongs in content. |
 | Bottom Bar exact UPS shell | GAP | No runtime. Future panel must use fixed full-width safe-area bar, 52px minimum tabs, `ha-icon` 28px, 12/700 labels, ~11% active primary background. |
 | Mandatory iPhone acceptance | GAP | No panel build exists to test. |
-| Approved source brand asset exists | GAP | No icon/logo/light/dark source exists. Do not invent a brand; obtain an approved gateway/integration source asset. |
-| Integration icon packaged through supported path | GAP | Domain is not yet implemented. After domain approval, add the mandatory HACS asset at `custom_components/<domain>/brand/icon.png`; add dark/logo variants when required. |
-| Repository visual identity | GAP | README has no logo/hero and GitHub social preview/avatar is not represented. After asset approval, add a README visual and configure repository social preview. |
+| Approved source brand asset exists | PASS | The selected theme-neutral square alpha mark is preserved at `assets/icon.png`. |
+| Integration icon packaged through supported path | GAP | No integration package exists yet. When the verified `vless_gateway` domain is implemented, copy the approved mark to `custom_components/vless_gateway/brand/icon.png`; do not create a fictitious package only to claim compliance. |
+| Repository visual identity | PASS | README displays `assets/icon.png`; the same square asset is suitable for repository avatar/social-preview configuration. |
 
 ## Contradiction prevention for first implementation
 
