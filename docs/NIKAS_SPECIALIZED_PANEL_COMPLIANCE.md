@@ -35,3 +35,14 @@ This repository is intentionally a bootstrap. README states that the Home Assist
 ## Future phone acceptance
 
 Before enabling the panel for users, test a long Diagnostics view and every tab on iPhone against the full mandatory acceptance list in the standard.
+
+
+<!-- v1.6-adoption -->
+## v1.6 adoption delta — 2026-08-26
+
+This bootstrap has no panel runtime, so runtime requirements remain GAP rather than assumed PASS.
+
+- **Indicator policy:** **NOT ENABLED.** A future VLESS panel may add the two-level indicator only after a separate explicit requirement defines the factual local/cloud/reserve path.
+- Future runtime must implement stable DOM point updates, stationary fixed chrome, sole Work Viewport scroll ownership and the LIDER typography scale directly from v1.6.
+- Repository identity `assets/icon.png` is present.
+- Packaged `custom_components/<domain>/brand/icon.png` remains a GAP until the Home Assistant integration package is introduced.
