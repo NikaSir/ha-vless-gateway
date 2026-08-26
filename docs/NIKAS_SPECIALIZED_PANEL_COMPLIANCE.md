@@ -21,7 +21,7 @@ This repository is intentionally a bootstrap. README states that the Home Assist
 | Bottom Bar exact UPS shell | GAP | No runtime. Future panel must use fixed full-width safe-area bar, 52px minimum tabs, `ha-icon` 28px, 12/700 labels, ~11% active primary background. |
 | Mandatory iPhone acceptance | GAP | No panel build exists to test. |
 | Approved source brand asset exists | GAP | No icon/logo/light/dark source exists. Do not invent a brand; obtain an approved gateway/integration source asset. |
-| Integration icon wired through supported path | GAP | Domain is not yet implemented. After domain approval, provide `icon.png` and `icon@2x.png` through the Home Assistant Brands custom-integration path; add dark variants when required. |
+| Integration icon packaged through supported path | GAP | Domain is not yet implemented. After domain approval, add the mandatory HACS asset at `custom_components/<domain>/brand/icon.png`; add dark/logo variants when required. |
 | Repository visual identity | GAP | README has no logo/hero and GitHub social preview/avatar is not represented. After asset approval, add a README visual and configure repository social preview. |
 
 ## Contradiction prevention for first implementation
@@ -29,7 +29,7 @@ This repository is intentionally a bootstrap. README states that the Home Assist
 - Do not set `native_scroll: false` or unconditional `one_pointer_pan: true`.
 - Do not put Back or gateway commands in the permanent left Header rail.
 - Do not use text glyphs for Header/Bottom icons.
-- Do not claim a brand is integrated merely because a private image file exists.
+- Do not claim a brand is integrated when the mandatory packaged `custom_components/<domain>/brand/icon.png` is absent.
 - Keep API verification and domain UI semantics separate from shell compliance.
 
 ## Future phone acceptance
