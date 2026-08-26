@@ -16,7 +16,7 @@ The gateway operating system, routing/VLESS implementation, provisioning scripts
 
 Repository bootstrap is complete; integration implementation will be introduced when the gateway management contract/API is defined and verified.
 
-There is no installable Home Assistant integration, registered panel route or HACS package yet. The future panel must implement **NIKAS Specialized Panel UI Standard v1.5** directly; the current compliance audit is in `docs/NIKAS_SPECIALIZED_PANEL_COMPLIANCE.md`.
+There is no installable Home Assistant integration, registered panel route or HACS package yet. The future panel must implement **NIKAS Specialized Panel UI Standard v1.6** directly; the current compliance audit is in `docs/NIKAS_SPECIALIZED_PANEL_COMPLIANCE.md`.
 
 The approved square gateway mark is stored at `assets/icon.png` and is the canonical repository visual. When the verified Home Assistant integration package is introduced, this same mark must be packaged at `custom_components/vless_gateway/brand/icon.png`; an empty or fictitious integration skeleton must not be created only to host an icon.
 
