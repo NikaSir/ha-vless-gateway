@@ -1,6 +1,6 @@
 # Specialized Panel Compliance Audit
 
-**Audit target:** NikaS Specialized Panel UI Standard v1.4
+**Audit target:** NikaS Specialized Panel UI Standard v1.5
 **Audited main:** `795484c99d8779665822ac3edc255882b592b469`
 **Policy:** audit only; no runtime exists to rewrite in this PR.
 
@@ -12,10 +12,10 @@ This repository is intentionally a bootstrap. README states that the Home Assist
 
 | Requirement | Result | Evidence / required correction |
 |---|---|---|
-| Standard is synchronized and non-contradictory | PASS | `docs/NIKAS_SPECIALIZED_PANEL_UI_STANDARD.md` contains v1.4 and points to the canonical source. |
+| Standard is synchronized and non-contradictory | PASS | `docs/NIKAS_SPECIALIZED_PANEL_UI_STANDARD.md` contains v1.5 and points to the canonical source. |
 | Integration implementation and HACS package | GAP | No `custom_components/<domain>`, `manifest.json` or `hacs.json` exists. Define the verified API/domain first, then add the supported custom Integration package and align README. |
 | Specialized panel route/registration | GAP | No `panel.json`, panel registration or frontend entry exists. |
-| Single viewport, native scroll at 100%, >100 axis-limited pan | GAP | No runtime to verify. Implement directly to v1.4; do not copy the superseded always-transform-pan pattern. |
+| Single viewport, native scroll at 100%, >100 axis-limited pan | GAP | No runtime to verify. Implement directly to v1.5; do not copy the superseded always-transform-pan pattern. |
 | Header exact UPS shell | GAP | No runtime. Implement fixed 62/60px Header, 52/1fr/52 (48 narrow), 44×44 plaques, radius 16/border/card/shadow, icons 25, menu primary-text, Refresh primary, title 21 and subtitle 12. |
 | Permanent HA menu left / internal parent navigation | GAP | No runtime. Future Header must always emit composed/bubbling `hass-toggle-menu`; Back belongs in content. |
 | Bottom Bar exact UPS shell | GAP | No runtime. Future panel must use fixed full-width safe-area bar, 52px minimum tabs, `ha-icon` 28px, 12/700 labels, ~11% active primary background. |
