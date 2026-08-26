@@ -2,9 +2,9 @@
 
 **Status:** REQUIRED  
 **Canonical source:** `NikaSir/ha-contract-generated-ui`  
-**Applies to:** every integration-owned specialized Home Assistant panel  
-**Primary acceptance viewport:** Home Assistant Companion App on iPhone Pro Max, portrait  
-**Reference shell:** Stark SolarPower / UPS  
+**Applies to:** every integration-owned specialized Home Assistant panel
+**Primary acceptance viewport:** Home Assistant Companion App on iPhone Pro Max, portrait
+**Reference shell:** Stark SolarPower / UPS
 **Reference typography and status treatment:** LIDER
 
 This document supersedes every earlier shell, Header/Back, zoom, scrolling, rendering, connection-indicator, typography and Bottom Tab Bar rule. Historical documents remain useful only where they do not conflict with this standard.
@@ -163,7 +163,7 @@ The indicator describes transport and freshness, not device operating mode. For 
 - Use one compact two-line plaque with stable dimensions sized for the longest allowed label.
 - The status lamp is fully inside the plaque: `8–10px` diameter with `10–12px` gap to text.
 - Minimum inner padding is approximately `12px` vertical and `14px` horizontal; radius is approximately `18px`.
-- Primary line is `15px / 700`; secondary line is `12px / 550–600`.
+- Primary line is `16px / 700`; secondary line is `13px / 600`.
 - The primary status color controls the primary text, lamp, border and a light plaque tint, following LIDER.
 - Recommended tint: mix the primary status color at approximately `8–12%` into `var(--card-background-color)`.
 - Recommended border: approximately `28–32%` of the same status color.
@@ -230,6 +230,6 @@ Unimplemented runtime behavior is recorded as `GAP`, never as an assumed `PASS`.
 - Several live polling cycles during upward scroll produce no white flash, loading screen, image reload, scroll jump or menu movement.
 - At least ten consecutive tab switches produce no blank frame or duplicated viewport.
 - Loss/recovery changes indicator and telemetry in place; cached values are visibly stale.
-- Meaningful text is never below `12px`; indicator is `15px/12px` with LIDER-style tinted surface.
+- Meaningful text is never below `12px`; an explicitly enabled indicator is `16px/13px` with LIDER-style tinted surface.
 - `Дом сейчас` and StarLine contain no optional connection/freshness indicator.
 - Repository and installed integration identity icons are present and recognizable.
