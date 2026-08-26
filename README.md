@@ -1,16 +1,20 @@
 # VLESS Gateway for Home Assistant
 
-Custom Home Assistant integration for monitoring and controlling the separate **VLESS Gateway** project.
+Reserved Home Assistant integration repository for the separate **VLESS Gateway** project.
 
 ## Scope boundary
 
-This repository contains only the Home Assistant integration: configuration, entities, commands/services, diagnostics, tests, documentation, HACS packaging, and releases.
+This repository currently contains the reviewed integration and specialized-panel contracts only. Configuration, entities, commands/services, diagnostics and HACS packaging will be added after the gateway API is defined and verified.
 
 The gateway operating system, routing/VLESS implementation, provisioning scripts, and network appliance configuration belong in **`NikaSir/vless-gateway`** and must not be duplicated here.
 
 ## Status
 
 Repository bootstrap is complete; integration implementation will be introduced when the gateway management contract/API is defined and verified.
+
+There is no installable Home Assistant integration, registered panel route or HACS package yet. The future panel must implement **NIKAS Specialized Panel UI Standard v1.5** directly; the current compliance audit is in `docs/NIKAS_SPECIALIZED_PANEL_COMPLIANCE.md`.
+
+No approved VLESS Gateway brand mark exists. Do not synthesize an icon from generic VPN/network symbols. Repository and Home Assistant Brands visuals remain explicitly blocked until an asset is approved.
 
 ## Repository policy
 

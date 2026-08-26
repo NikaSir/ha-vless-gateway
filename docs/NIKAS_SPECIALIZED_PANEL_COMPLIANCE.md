@@ -1,6 +1,6 @@
 # Specialized Panel Compliance Audit
 
-**Audit target:** NikaS Specialized Panel UI Standard v1.5
+**Audit target:** NIKAS Specialized Panel UI Standard v1.5
 **Audited main:** `795484c99d8779665822ac3edc255882b592b469`
 **Policy:** audit only; no runtime exists to rewrite in this PR.
 
