@@ -16,7 +16,7 @@ class SpecializedPanelReadinessTests(unittest.TestCase):
         cls.contract = json.loads(CONTRACT.read_text(encoding="utf-8"))
 
     def test_bootstrap_does_not_claim_a_runtime(self) -> None:
-        self.assertEqual(self.contract["standard_version"], "1.6")
+        self.assertEqual(self.contract["standard_version"], "1.7")
         self.assertFalse(self.contract["integration"]["present"])
         self.assertFalse(self.contract["panel"]["runtime_present"])
         self.assertFalse(self.contract["panel"]["runtime_compliance_claimed"])

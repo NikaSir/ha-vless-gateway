@@ -2,7 +2,7 @@
   "schema_version": 1,
   "repository": "ha-vless-gateway",
   "standard": "NikaS Specialized Panel UI Standard",
-  "standard_version": "1.6",
+  "standard_version": "1.7",
   "repository_state": "bootstrap",
   "integration": {
     "domain": "vless_gateway",
