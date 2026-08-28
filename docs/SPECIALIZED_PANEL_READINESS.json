@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "repository": "ha-vless-gateway",
+  "standard": "NikaS Specialized Panel UI Standard",
+  "standard_version": "1.9",
+  "repository_state": "bootstrap",
+  "integration": {
+    "domain": "vless_gateway",
+    "present": false,
+    "brand_icon_required_when_present": "custom_components/vless_gateway/brand/icon.png"
+  },
+  "panel": {
+    "runtime_present": false,
+    "route_registered": false,
+    "production_entry_present": false,
+    "autonomous_bundle_required": true,
+    "data_truth_policy_required": true,
+    "runtime_compliance_claimed": false
+  },
+  "repository_identity": {
+    "icon": "assets/icon.png",
+    "readme_uses_icon": true,
+    "width_px": 512,
+    "height_px": 512,
+    "alpha_required": true
+  },
+  "optional_connection_indicator": {
+    "enabled": false,
+    "policy": "explicit_repository_request_only"
+  },
+  "future_panel_contract": {
+    "fixed_chrome": ["header", "peer_device_selector", "bottom_navigation"],
+    "single_zoom_viewport": true,
+    "scale_percent": [75, 200],
+    "snap_to_100_percent": [97, 103],
+    "reset_gesture": "stationary_two_finger_double_tap",
+    "native_vertical_scroll_at_100_percent": true,
+    "horizontal_scroll_at_100_percent": false,
+    "one_finger_pan_only_above_100_percent": true,
+    "pan_axes": "overflow_only",
+    "stable_dom_after_initial_mount": true,
+    "polling_updates": "point_patch",
+    "tab_switch": "persistent_hidden_inert",
+    "production_bundle": "single_autonomous_entrypoint",
+    "data_truth": "integration_api_or_ha_registry_only",
+    "invented_entity_ids": false,
+    "header": {
+      "side_slots_px": 52,
+      "side_slots_px_narrow": 48,
+      "control_size_px": 44,
+      "control_radius_px": 16,
+      "control_icon_px": 25,
+      "title_px": 23,
+      "subtitle_px": 14,
+      "title_px_narrow": 21,
+      "subtitle_px_narrow": 13
+    },
+    "bottom_navigation": {
+      "icon_px": 28,
+      "label_px": 12,
+      "label_weight": 700,
+      "safe_area": true
+    },
+    "meaningful_font_range_px": [12, 25]
+  }
+}
