@@ -2,7 +2,7 @@
   "schema_version": 1,
   "repository": "ha-vless-gateway",
   "standard": "NikaS Specialized Panel UI Standard",
-  "standard_version": "1.8",
+  "standard_version": "1.9",
   "repository_state": "bootstrap",
   "integration": {
     "domain": "vless_gateway",
@@ -13,6 +13,8 @@
     "runtime_present": false,
     "route_registered": false,
     "production_entry_present": false,
+    "autonomous_bundle_required": true,
+    "data_truth_policy_required": true,
     "runtime_compliance_claimed": false
   },
   "repository_identity": {
@@ -39,6 +41,9 @@
     "stable_dom_after_initial_mount": true,
     "polling_updates": "point_patch",
     "tab_switch": "persistent_hidden_inert",
+    "production_bundle": "single_autonomous_entrypoint",
+    "data_truth": "integration_api_or_ha_registry_only",
+    "invented_entity_ids": false,
     "header": {
       "side_slots_px": 52,
       "side_slots_px_narrow": 48,

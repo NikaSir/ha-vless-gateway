@@ -46,7 +46,7 @@ jobs:
       - name: Verify specialized-panel readiness contract
         run: python -m unittest discover -s tests -v
 
-      - name: Enforce NikaS UI standard v1.8
+      - name: Enforce NikaS UI standard v1.9
         run: python scripts/check_nikas_ui_standard.py
 
       - name: Validate approved repository icon

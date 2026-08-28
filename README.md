@@ -16,7 +16,7 @@ The gateway operating system, routing/VLESS implementation, provisioning scripts
 
 Repository bootstrap is complete; integration implementation will be introduced when the gateway management contract/API is defined and verified.
 
-There is no installable Home Assistant integration, registered panel route or HACS package yet. The future panel must implement **NikaS Specialized Panel UI Standard v1.8** and its required navigation contract directly; the current compliance audit is in `docs/NIKAS_SPECIALIZED_PANEL_COMPLIANCE.md` and the machine-readable decision is in `docs/SPECIALIZED_PANEL_READINESS.json`.
+There is no installable Home Assistant integration, registered panel route or HACS package yet. The future panel must implement **NikaS Specialized Panel UI Standard v1.9** and its required navigation contract directly; the current compliance audit is in `docs/NIKAS_SPECIALIZED_PANEL_COMPLIANCE.md` and the machine-readable decision is in `docs/SPECIALIZED_PANEL_READINESS.json`.
 
 The optional common connection/freshness indicator is not enabled for VLESS Gateway. It may be added only by an explicit repository-specific request after real transport semantics exist. The first runtime must also mount a stationary Header and Bottom Bar around one zoom viewport, use stable point-patched DOM without polling/tab flicker, and keep meaningful text within 12–25px.
 

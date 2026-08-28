@@ -1,21 +1,23 @@
 # Specialized Panel Compliance Audit
 
-**Audit target:** NikaS Specialized Panel UI Standard v1.8 and Navigation Contract v1.0
+**Audit target:** NikaS Specialized Panel UI Standard v1.9 and Navigation Contract v1.1
 **Audited main:** `1748dbfa3c3e32eaf2cbfc3c4ee094ab2d1cf43b`
 **Repository state:** bootstrap only; no integration or specialized-panel runtime exists
 
 ## Summary
 
-VLESS Gateway does not yet ship a Home Assistant integration, HACS package, panel route or frontend. Runtime requirements therefore remain an explicit **GAP** rather than being reported as unverified passes. The v1.8 UI and navigation contracts, approved repository identity and automated readiness checks are present now; the first real implementation must satisfy them directly.
+VLESS Gateway does not yet ship a Home Assistant integration, HACS package, panel route or frontend. Runtime requirements therefore remain an explicit **GAP** rather than being reported as unverified passes. The v1.9 UI and navigation contracts, approved repository identity and automated readiness checks are present now; the first real implementation must satisfy them directly.
 
 ## Compliance
 
 | Requirement | Result | Evidence / required correction |
 |---|---|---|
-| Standard synchronized and non-contradictory | PASS | The canonical v1.8 UI standard and Navigation Contract v1.0 are pinned by checksum and supersede older shell guidance. |
+| Standard synchronized and non-contradictory | PASS | The canonical v1.9 UI standard and Navigation Contract v1.1 are pinned by checksum and supersede older shell guidance. |
 | Machine-readable readiness decision | PASS | `docs/SPECIALIZED_PANEL_READINESS.json` records that integration/panel runtime are absent and prevents false runtime claims. |
 | Integration implementation and HACS package | DEFERRED | No `custom_components/vless_gateway`, manifest or `hacs.json` exists. Define and verify the gateway management API before adding the package. |
 | Specialized panel route and production entry | DEFERRED | No panel registration, route, web component or frontend bundle exists. |
+| Autonomous production bundle | DEFERRED | The first runtime must ship one deterministic autonomous entrypoint with no runtime import chain; no bundle exists yet. |
+| Data truth and command safety | DEFERRED | The future integration API/HA registry mapping and command capabilities must be verified before UI work; no entity IDs, gateway commands or success states may be invented. |
 | Fixed shell and sole scroll owner | DEFERRED | Future runtime must keep Header/selector/Bottom Bar outside one Work Viewport; the outer page must not scroll. |
 | Scale and scroll contract | DEFERRED | Future runtime must implement 75–200% focal pinch, 97–103% snap, stationary two-finger reset, native vertical scroll at 100% and bounded overflow-axis pan only above 100%. |
 | Stable DOM / no polling or tab flicker | DEFERRED | Future runtime must mount shell/views once, point-patch telemetry and preserve Header, viewport, images, tabs and Bottom Bar identities. |
@@ -40,4 +42,4 @@ VLESS Gateway does not yet ship a Home Assistant integration, HACS package, pane
 
 ## Future phone acceptance
 
-Before enabling a real panel, complete every v1.8 iPhone check, including source-route return from all three base panels, long Diagnostics scrolling, fixed Header/Bottom Bar during inertia and boundary pull, bounded pan, pinch stability, more-info safety, ten tab switches without a blank frame and repeated polling during upward scroll.
+Before enabling a real panel, complete every v1.9 iPhone check, including source-route return from all three base panels, long Diagnostics scrolling, fixed Header/Bottom Bar during inertia and boundary pull, bounded pan, pinch stability, more-info safety, ten tab switches without a blank frame and repeated polling during upward scroll.
