@@ -1,45 +1,52 @@
 # Specialized Panel Compliance Audit
 
 **Audit target:** NikaS Specialized Panel UI Standard v1.9 and Navigation Contract v1.1
-**Audited main:** `1748dbfa3c3e32eaf2cbfc3c4ee094ab2d1cf43b`
-**Repository state:** bootstrap only; no integration or specialized-panel runtime exists
+
+**Repository state:** installable VLESS Gateway panel scaffold
+
+**Runtime version:** integration `0.1.0`, UI `0.1.0`
 
 ## Summary
 
-VLESS Gateway does not yet ship a Home Assistant integration, HACS package, panel route or frontend. Runtime requirements therefore remain an explicit **GAP** rather than being reported as unverified passes. The v1.9 UI and navigation contracts, approved repository identity and automated readiness checks are present now; the first real implementation must satisfy them directly.
+The repository now contains an installable panel-only Home Assistant integration and an autonomous frontend scaffold. The panel is intentionally read-only until the separate gateway project exposes a reviewed management/telemetry API. It never guesses entity IDs: overview, route and traffic values use only `panel.config.entity_roles`, while Diagnostics additionally reads entities whose Home Assistant registry platform is `vless_gateway`.
+
+Automated contract checks can verify the implementation shape. Real iPhone portrait, cold-load, restart and Home Assistant Cloud acceptance remain required before runtime compliance is claimed.
 
 ## Compliance
 
-| Requirement | Result | Evidence / required correction |
+| Requirement | Result | Evidence / remaining work |
 |---|---|---|
-| Standard synchronized and non-contradictory | PASS | The canonical v1.9 UI standard and Navigation Contract v1.1 are pinned by checksum and supersede older shell guidance. |
-| Machine-readable readiness decision | PASS | `docs/SPECIALIZED_PANEL_READINESS.json` records that integration/panel runtime are absent and prevents false runtime claims. |
-| Integration implementation and HACS package | DEFERRED | No `custom_components/vless_gateway`, manifest or `hacs.json` exists. Define and verify the gateway management API before adding the package. |
-| Specialized panel route and production entry | DEFERRED | No panel registration, route, web component or frontend bundle exists. |
-| Autonomous production bundle | DEFERRED | The first runtime must ship one deterministic autonomous entrypoint with no runtime import chain; no bundle exists yet. |
-| Data truth and command safety | DEFERRED | The future integration API/HA registry mapping and command capabilities must be verified before UI work; no entity IDs, gateway commands or success states may be invented. |
-| Fixed shell and sole scroll owner | DEFERRED | Future runtime must keep Header/selector/Bottom Bar outside one Work Viewport; the outer page must not scroll. |
-| Scale and scroll contract | DEFERRED | Future runtime must implement 75–200% focal pinch, 97–103% snap, stationary two-finger reset, native vertical scroll at 100% and bounded overflow-axis pan only above 100%. |
-| Stable DOM / no polling or tab flicker | DEFERRED | Future runtime must mount shell/views once, point-patch telemetry and preserve Header, viewport, images, tabs and Bottom Bar identities. |
-| UPS Header geometry | DEFERRED | Future Header: 52/1fr/52 rails (48 narrow), matching 44×44 radius-16 plaques, 25px icons, 23/14 title/subtitle and 21/13 narrow. |
-| Native HA menu, title return and Refresh | DEFERRED | Left control must be `mdi:menu`; the centered two-line title plaque returns to the captured NikaS base route without `history.back()`; optional Refresh uses a matching plaque. |
-| Bottom Tab Bar | DEFERRED | Future bar must be fixed, full-width and safe-area aware, with MDI `ha-icon` 28px, 12/700 labels and primary-colour active tint. |
-| Optional common indicator | PASS | Explicitly **disabled**. It may be introduced only by a future repository-specific request; no transport/freshness semantics are invented during bootstrap. |
-| Typography | DEFERRED | Future meaningful text range is 12–25px; 9–10px is limited to redundant non-interactive schematic annotations. |
-| Repository identity | PASS | README displays the approved 512×512 alpha PNG at `assets/icon.png`; CI validates it. |
-| Packaged integration icon | DEFERRED | No integration package exists. When the verified domain is implemented, the approved mark must ship as `custom_components/vless_gateway/brand/icon.png`; do not create a fictitious package only to host it. |
-| Mandatory iPhone acceptance | DEFERRED | Required after the first panel build and before user enablement. |
+| Standard synchronized and non-contradictory | PASS | Canonical v1.9 UI standard and Navigation Contract v1.1 remain pinned by checksum. |
+| Installable integration and HACS package | PASS | `custom_components/vless_gateway`, config flow, manifest, translations and `hacs.json` are present. |
+| Specialized panel route | PASS | The integration registers `/dashboard-vless-gateway`, owned by `vless_gateway`, with `/dashboard-infrastructure/overview` as safe fallback. |
+| Autonomous production bundle | PASS | One deterministic `vless-gateway-panel.js` is built from local sources; runtime imports and historical bundle chains are absent. |
+| Data truth and command safety | PASS | No fixed entity IDs are shipped. Missing, `unknown` and `unavailable` states are explicit. The UI contains no Home Assistant service calls. |
+| Fixed shell and sole scroll owner | PASS | Header and Bottom Tab Bar are outside one `.canvas-viewport`; the mobile host is height-locked and prevents outer-page scrolling. |
+| Scale and scroll contract | PASS | The copied/adapted v1.9 controller implements 75–200% focal pinch, 97–103% snap, stationary two-finger reset, native vertical scroll at 100% and bounded pan only above 100%. |
+| Stable DOM / no polling or tab flicker | PASS | The shell mounts once. Visited tab subtrees are cached and hidden/inert; current-view values are reconciled without replacing fixed chrome. |
+| Header geometry | PASS | 52/1fr/52 rails (48 narrow), matching 44×44 radius-16 plaques, 25px icons and 23/14 typography (21/13 narrow). |
+| Native HA menu, title return and Refresh | PASS | Left rail dispatches `hass-toggle-menu`; the centered LIDER-style title captures and returns to the originating base route; Refresh only reloads safe registry metadata. |
+| Bottom Tab Bar | PASS | Fixed full-width safe-area-aware four-tab bar with 28px MDI icons, 12/700 labels and primary active tint. |
+| Optional common connection indicator | PASS | Explicitly disabled. It remains opt-in after real transport/freshness semantics are known. |
+| Typography | PASS | Meaningful panel text stays within 12–25px. |
+| Repository and packaged identity | PASS | The approved 512×512 alpha PNG is used in README and packaged at `custom_components/vless_gateway/brand/icon.png`. |
+| Mandatory real-device acceptance | PENDING | Test on iPhone Pro Max portrait after the branch is installed in Home Assistant. |
 
-## Contradiction prevention for first implementation
+## Scaffold content
 
-- Do not claim runtime compliance while `runtime_present` is false.
-- Do not use unconditional one-finger pan, native horizontal scroll, nested zoom wrappers or permanent zoom controls.
-- Do not put Back, gateway commands or text-glyph icons in permanent navigation rails.
-- Do not rebuild `shadowRoot` on Home Assistant polling or tab changes.
-- Do not introduce the common connection/freshness indicator without an explicit VLESS-specific request.
-- Do not use meaningful text below 12px or above 25px.
-- Do not claim an integration icon until a real supported integration package exists.
+- **Обзор:** factual Hero, intended LAN → Gateway → VLESS server → Internet topology and primary metrics.
+- **Маршруты:** active route, routing mode, bypass state and network-contour placeholders.
+- **Трафик:** receive/transmit rates, routed traffic, connection count and counters.
+- **Диагн.:** integration identity plus raw state, timestamps and all attributes of involved entities.
 
-## Future phone acceptance
+## Acceptance still required
 
-Before enabling a real panel, complete every v1.9 iPhone check, including source-route return from all three base panels, long Diagnostics scrolling, fixed Header/Bottom Bar during inertia and boundary pull, bounded pan, pinch stability, more-info safety, ten tab switches without a blank frame and repeated polling during upward scroll.
+Before enabling the panel as operational, verify on the real phone:
+
+1. cold load on LAN and Home Assistant Cloud/Nabu Casa;
+2. full Home Assistant restart followed by repeated panel opens;
+3. source-aware return from all applicable base panels;
+4. fixed Header and Bottom Tab Bar during long Diagnostics scrolling and boundary pull;
+5. focal pinch, bounded enlarged pan, 97–103% snap and stationary two-finger reset;
+6. long-press `more-info` without accidental activation during pinch;
+7. at least ten tab switches and repeated Home Assistant state updates without blank frames.

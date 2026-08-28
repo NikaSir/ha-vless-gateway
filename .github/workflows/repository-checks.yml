@@ -22,6 +22,11 @@ jobs:
         with:
           python-version: "3.13"
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
       - name: Validate JSON files
         run: |
           python - <<'PY'
@@ -43,7 +48,12 @@ jobs:
           fi
           python -m compileall -q tests
 
-      - name: Verify specialized-panel readiness contract
+      - name: Verify deterministic autonomous frontend bundle
+        run: |
+          node scripts/build-frontend-bundle.mjs --check
+          node --check custom_components/vless_gateway/frontend/vless-gateway-panel.js
+
+      - name: Verify integration and specialized-panel contracts
         run: python -m unittest discover -s tests -v
 
       - name: Enforce NikaS UI standard v1.9
@@ -64,6 +74,9 @@ jobs:
               raise SystemExit(f'Unexpected repository icon size: {(width, height)}')
           if data[25] not in (4, 6):
               raise SystemExit('Repository icon has no alpha channel')
+          packaged = Path('custom_components/vless_gateway/brand/icon.png').read_bytes()
+          if packaged != data:
+              raise SystemExit('Packaged integration icon differs from approved repository icon')
           print('Repository icon OK: 512x512 with alpha')
           PY
 

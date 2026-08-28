@@ -1,0 +1,14 @@
+{
+  "title": "VLESS Gateway",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Панель VLESS Gateway",
+        "description": "Добавить read-only заготовку панели VLESS Gateway. Телеметрия и команды появятся только после утверждения API шлюза."
+      }
+    },
+    "abort": {
+      "already_configured": "Панель VLESS Gateway уже добавлена."
+    }
+  }
+}

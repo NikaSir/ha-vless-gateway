@@ -1,0 +1,85 @@
+{
+  "id": "vless-gateway",
+  "title": "VLESS Gateway",
+  "path": "/dashboard-vless-gateway",
+  "parent_route": "/dashboard-infrastructure/overview",
+  "icon": "mdi:shield-lock-outline",
+  "owner": "vless_gateway",
+  "preferred_view": "overview",
+  "ui_version": "0.1.0",
+  "template_version": "1.9",
+  "module_url": "vless-gateway-panel.js",
+  "read_only": true,
+  "tabs": ["overview", "routes", "traffic", "diagnostics"],
+  "frontend_delivery": {
+    "mode": "self_contained_bundle",
+    "source_modules": [
+      "frontend/src/zoom-controller.js",
+      "frontend/src/vless-gateway-panel.js"
+    ],
+    "build_script": "scripts/build-frontend-bundle.mjs",
+    "runtime_previous_version_imports": false
+  },
+  "rendering": {
+    "stable_shell_dom": true,
+    "shadow_root_inner_html": "initial_mount_only",
+    "telemetry_updates": "point_patch_current_view",
+    "initial_state": "fixed_shell_with_loading_skeleton",
+    "unknown_unavailable": "explicit_no_data",
+    "hass_updates": "coalesced_to_one_animation_frame",
+    "visited_views": "lazy_dom_cache_and_same_subtree_reuse",
+    "preserve_on_update": [
+      "header",
+      "header_return_route",
+      "zoom_viewport",
+      "scroll",
+      "bottom_tab_bar"
+    ]
+  },
+  "shell": {
+    "header_left_action": "hass-toggle-menu",
+    "header_center_action": "return_to_source_base_panel",
+    "header_center_lines": ["title", "ui_version"],
+    "header_history_back_allowed": false,
+    "header_safe_default_route": "/dashboard-infrastructure/overview",
+    "header_allowed_base_routes": [
+      "/dashboard-house-v11/home",
+      "/dashboard-actions/home",
+      "/dashboard-infrastructure/overview"
+    ],
+    "header_grid_px": [52, 0, 52],
+    "header_button_px": 44,
+    "header_icon_px": 25,
+    "bottom_tabs_single_row": true,
+    "bottom_tab_columns": 4,
+    "bottom_tab_min_height_px": 52,
+    "bottom_icon_px": 28,
+    "bottom_label_px": 12,
+    "bottom_full_width": true,
+    "safe_area_once": true
+  },
+  "zoom": {
+    "viewport_count": 1,
+    "min_percent": 75,
+    "max_percent": 200,
+    "default_percent": 100,
+    "controls": "gesture_only",
+    "reset": "two_finger_double_tap",
+    "snap_percent": [97, 103],
+    "persistent": true,
+    "native_vertical_scroll_at_100_percent": true,
+    "pan_only_when_scaled_content_overflows": true,
+    "bounded_to_content_edges": true
+  },
+  "runtime_contract": {
+    "entity_roles": "panel_config_only",
+    "diagnostic_entities": "entity_registry_platform_only",
+    "synthetic_entity_ids": false,
+    "missing_metrics": "explicit_no_data",
+    "command_policy": "read_only_until_gateway_api_is_verified"
+  },
+  "connection_status": {
+    "enabled": false,
+    "policy": "explicit_repository_request_only"
+  }
+}
