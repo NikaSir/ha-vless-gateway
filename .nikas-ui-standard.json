@@ -1,7 +1,7 @@
 {
   "version": "1.7",
   "standard_path": "docs/NIKAS_SPECIALIZED_PANEL_UI_STANDARD.md",
-  "standard_sha256": "22c0cec7fa61b8210fc40e3f053242335f8e502984cbb8a4fb93c33a93bd3706",
+  "standard_sha256": "17afc8ea93b07a4362c45e5e9d5f6504158e70a9c19328a545403a92f1e08a8c",
   "role": "readiness",
   "runtime_files": [],
   "compliance_path": "docs/NIKAS_SPECIALIZED_PANEL_COMPLIANCE.md"
