@@ -4,14 +4,14 @@
 
 - `main` is the canonical source branch.
 - This repository does not publish GitHub Releases or attach generated archives through the Releases API.
-- Reviewed pull requests and committed source are the delivery record during bootstrap.
-- Automatic release tags are not used; a future internal integration version does not by itself require a Git tag.
+- Reviewed pull requests and committed source are the delivery record.
+- Automatic release tags are not used; an integration version does not by itself require a Git tag.
 
 ## Version lineage
 
-Existing project version history, once implementation begins, must be preserved during GitHub migration. Repository bootstrap is not a functional update.
+Integration and UI versions are explicit numeric `X.Y.Z` values. Version `0.1.0` identifies the first installable read-only panel scaffold; it does not claim that the separate gateway management API is implemented.
 
-Before HACS publication, the integration manifest version format must be validated against current Home Assistant/HACS requirements. Until that validation is complete, no synthetic version number is introduced by this repository scaffold.
+The integration manifest, panel metadata, production bundle cache key and visible `UI vX.Y.Z` line must remain coherent for every accepted update.
 
 ## Publication gate
 

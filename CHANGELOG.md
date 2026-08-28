@@ -6,10 +6,15 @@ All notable project changes are recorded here.
 
 ### Added
 
-- Initial GitHub repository bootstrap and integration boundary documentation.
-- NikaS Specialized Panel UI Standard v1.6 readiness contract and automated bootstrap/brand checks.
+- Installable panel-only `vless_gateway` custom integration version `0.1.0`.
+- Autonomous VLESS Gateway UI `0.1.0` at `/dashboard-vless-gateway`.
+- Read-only `Обзор`, `Маршруты`, `Трафик` and `Диагн.` views.
+- Declarative entity-role boundary and registry-backed raw Diagnostics without guessed entity IDs.
+- Deterministic frontend build and runtime/data-truth contract tests.
+- Packaged approved gateway mark at `custom_components/vless_gateway/brand/icon.png`.
 
 ### Changed
 
-- Explicitly keeps the optional common connection/freshness indicator disabled until requested for a verified runtime.
-- Records stable-DOM, fixed-shell, 75–200% zoom, UPS Header/Bottom Bar and 12–25px typography requirements for the future panel.
+- Promoted the repository from readiness-only bootstrap to an installable panel scaffold.
+- Keeps all state-changing commands disabled until the gateway API and fail-closed write contract are verified.
+- Keeps the optional common connection/freshness indicator disabled until explicitly requested for verified transport semantics.

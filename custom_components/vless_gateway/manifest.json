@@ -1,0 +1,13 @@
+{
+  "domain": "vless_gateway",
+  "name": "VLESS Gateway",
+  "codeowners": ["@NikaSir"],
+  "config_flow": true,
+  "dependencies": ["http", "panel_custom"],
+  "documentation": "https://github.com/NikaSir/ha-vless-gateway",
+  "integration_type": "service",
+  "iot_class": "calculated",
+  "issue_tracker": "https://github.com/NikaSir/ha-vless-gateway/issues",
+  "requirements": [],
+  "version": "0.1.0"
+}

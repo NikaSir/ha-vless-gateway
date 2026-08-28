@@ -4,37 +4,68 @@
   <img src="assets/icon.png" width="180" alt="VLESS Gateway repository icon">
 </p>
 
-Reserved Home Assistant integration repository for the separate **VLESS Gateway** project.
-
-## Scope boundary
-
-This repository currently contains the reviewed integration boundary and specialized-panel readiness contracts only. Configuration, entities, commands/services, diagnostics and HACS packaging will be added after the gateway API is defined and verified.
-
-The gateway operating system, routing/VLESS implementation, provisioning scripts, and network appliance configuration belong in **`NikaSir/vless-gateway`** and must not be duplicated here.
+Installable read-only panel scaffold for the separate **VLESS Gateway** project.
 
 ## Status
 
-Repository bootstrap is complete; integration implementation will be introduced when the gateway management contract/API is defined and verified.
+- Integration version: `0.1.0`.
+- Panel UI version: `0.1.0`.
+- Home Assistant route: `/dashboard-vless-gateway`.
+- Parent section: **Инфраструктура** (`/dashboard-infrastructure/overview`).
+- Views: **Обзор**, **Маршруты**, **Трафик**, **Диагн.**
+- Commands: disabled until the gateway API and safe write contract are verified.
 
-There is no installable Home Assistant integration, registered panel route or HACS package yet. The future panel must implement **NikaS Specialized Panel UI Standard v1.9** and its required navigation contract directly; the current compliance audit is in `docs/NIKAS_SPECIALIZED_PANEL_COMPLIANCE.md` and the machine-readable decision is in `docs/SPECIALIZED_PANEL_READINESS.json`.
+The scaffold is intentionally honest when no telemetry exists: it renders `Нет данных`, preserves the complete application shell and never invents Home Assistant entity IDs. The optional common connection/freshness indicator is not enabled for VLESS Gateway and remains a separate product decision.
 
-The optional common connection/freshness indicator is not enabled for VLESS Gateway. It may be added only by an explicit repository-specific request after real transport semantics exist. The first runtime must also mount a stationary Header and Bottom Bar around one zoom viewport, use stable point-patched DOM without polling/tab flicker, and keep meaningful text within 12–25px.
+## Scope boundary
 
-The approved square gateway mark is stored at `assets/icon.png` and is the canonical repository visual. When the verified Home Assistant integration package is introduced, this same mark must be packaged at `custom_components/vless_gateway/brand/icon.png`; an empty or fictitious integration skeleton must not be created only to host an icon.
+This repository owns:
+
+- the Home Assistant custom integration package;
+- the specialized panel and its autonomous frontend bundle;
+- entity-role and diagnostics presentation contracts;
+- HACS metadata, tests and panel documentation.
+
+The gateway operating system, routing/VLESS implementation, Raspberry Pi provisioning, Xray/sing-box, systemd and firewall belong in **`NikaSir/vless-gateway`** and must not be duplicated here.
+
+No gateway credentials, private keys, UUIDs, access tokens, server addresses or production network secrets may be committed.
+
+## Panel composition
+
+The panel follows **NikaS Specialized Panel UI Standard v1.9**:
+
+- fixed Home Assistant menu Header with LIDER-style title/return plaque;
+- one gesture-driven work viewport;
+- fixed full-width safe-area-aware Bottom Tab Bar;
+- 75–200% focal pinch, 97–103% snap and two-finger double-tap reset;
+- native vertical scrolling at 100%, bounded one-finger pan only above 100%;
+- stable shell DOM and lazy persistent tab subtrees;
+- meaningful typography within 12–25px;
+- long press on factual entity-backed content opens native Home Assistant `more-info`.
+
+See [`docs/VLESS_GATEWAY_PANEL.md`](docs/VLESS_GATEWAY_PANEL.md) for the reserved entity roles and write-safety boundary.
+
+## Installation after merge
+
+1. Add `https://github.com/NikaSir/ha-vless-gateway` to HACS as a custom **Integration** repository.
+2. Install **VLESS Gateway** and restart Home Assistant.
+3. Open **Settings → Devices & services → Add integration → VLESS Gateway**.
+4. Open `/dashboard-vless-gateway`.
+
+This first version does not require gateway credentials because it does not connect to the gateway API yet.
+
+## Development checks
+
+```bash
+node scripts/build-frontend-bundle.mjs --check
+node --check custom_components/vless_gateway/frontend/vless-gateway-panel.js
+python -m unittest discover -s tests -v
+python scripts/check_nikas_ui_standard.py
+```
 
 ## Repository policy
 
 - Default branch: `main`.
-- GitHub Releases are not used; bootstrap changes are delivered as reviewed source commits/PRs.
-- No gateway credentials, private keys, UUIDs, access tokens, or production network secrets may be committed.
-- The integration must depend on a documented gateway interface rather than undocumented host internals.
+- GitHub Releases and automatic release tags are not used.
+- Frontend history belongs in reviewed commits and merged pull requests, not runtime import chains.
 - Shared contribution/security defaults are inherited from `NikaSir/.github` unless overridden here.
-
-## Target layout
-
-```text
-custom_components/vless_gateway/
-docs/
-.github/workflows/
-hacs.json
-```
