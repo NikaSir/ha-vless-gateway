@@ -9,6 +9,7 @@ All notable project changes are recorded here.
 - Bump the integration to `0.1.1`, prefix the Home Assistant/HACS name with `NikaS`
   and republish the approved local brand icon.
 - Ship a standards-compliant 256×256 `icon.png` plus 512×512 `icon@2x.png`.
+- Validate the approved 512×512 source against `icon@2x.png` and the 256×256 package separately.
 
 ### Added
 
