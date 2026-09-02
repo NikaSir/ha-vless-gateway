@@ -4,6 +4,12 @@ All notable project changes are recorded here.
 
 ## [Unreleased]
 
+### Changed
+
+- Bump the integration to `0.1.1`, prefix the Home Assistant/HACS name with `NikaS`
+  and republish the approved local brand icon.
+- Ship a standards-compliant 256×256 `icon.png` plus 512×512 `icon@2x.png`.
+
 ### Added
 
 - Installable panel-only `vless_gateway` custom integration version `0.1.0`.

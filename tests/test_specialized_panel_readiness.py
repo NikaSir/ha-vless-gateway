@@ -60,11 +60,16 @@ class SpecializedPanelReadinessTests(unittest.TestCase):
     def test_repository_and_packaged_icons_are_approved(self) -> None:
         repository_icon = ROOT / self.contract["repository_identity"]["icon"]
         packaged_icon = ROOT / self.contract["repository_identity"]["packaged_icon"]
-        data = repository_icon.read_bytes()
-        self.assertEqual(data, packaged_icon.read_bytes())
+        packaged_icon_2x = packaged_icon.with_name("icon@2x.png")
+        data = packaged_icon.read_bytes()
+        data_2x = packaged_icon_2x.read_bytes()
+        self.assertEqual(repository_icon.read_bytes(), data_2x)
         self.assertEqual(data[:8], b"\x89PNG\r\n\x1a\n")
-        self.assertEqual(struct.unpack(">II", data[16:24]), (512, 512))
+        self.assertEqual(data_2x[:8], b"\x89PNG\r\n\x1a\n")
+        self.assertEqual(struct.unpack(">II", data[16:24]), (256, 256))
+        self.assertEqual(struct.unpack(">II", data_2x[16:24]), (512, 512))
         self.assertIn(data[25], (4, 6))
+        self.assertIn(data_2x[25], (4, 6))
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
         self.assertIn("assets/icon.png", readme)
         self.assertIn("/dashboard-vless-gateway", readme)
