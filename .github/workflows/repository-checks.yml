@@ -74,10 +74,14 @@ jobs:
               raise SystemExit(f'Unexpected repository icon size: {(width, height)}')
           if data[25] not in (4, 6):
               raise SystemExit('Repository icon has no alpha channel')
-          packaged = Path('custom_components/vless_gateway/brand/icon.png').read_bytes()
-          if packaged != data:
-              raise SystemExit('Packaged integration icon differs from approved repository icon')
-          print('Repository icon OK: 512x512 with alpha')
+          packaged_1x = Path('custom_components/vless_gateway/brand/icon.png').read_bytes()
+          width_1x, height_1x = struct.unpack('>II', packaged_1x[16:24])
+          if (width_1x, height_1x) != (256, 256):
+              raise SystemExit(f'Unexpected packaged 1x icon size: {(width_1x, height_1x)}')
+          packaged_2x = Path('custom_components/vless_gateway/brand/icon@2x.png').read_bytes()
+          if packaged_2x != data:
+              raise SystemExit('Packaged 2x integration icon differs from approved repository icon')
+          print('Repository icon OK: 512x512 source, 256x256 package and 512x512 @2x')
           PY
 
       - name: Reject tracked credential/key files

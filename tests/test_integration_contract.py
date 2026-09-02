@@ -19,14 +19,14 @@ class IntegrationContractTests(unittest.TestCase):
         panel = (INTEGRATION / "panel.py").read_text(encoding="utf-8")
 
         self.assertEqual(manifest["domain"], "vless_gateway")
-        self.assertEqual(manifest["version"], "0.1.0")
+        self.assertEqual(manifest["version"], "0.1.1")
         self.assertTrue(manifest["config_flow"])
         self.assertEqual(panel_manifest["ui_version"], "0.1.0")
         self.assertEqual(panel_manifest["path"], "/dashboard-vless-gateway")
         self.assertEqual(
             panel_manifest["parent_route"], "/dashboard-infrastructure/overview"
         )
-        self.assertIn('INTEGRATION_VERSION = "0.1.0"', constants)
+        self.assertIn('INTEGRATION_VERSION = "0.1.1"', constants)
         self.assertIn('PANEL_UI_VERSION = "0.1.0"', constants)
         self.assertIn('?v={PANEL_UI_VERSION}', panel)
 
@@ -56,7 +56,7 @@ class IntegrationContractTests(unittest.TestCase):
         translation = json.loads(
             (INTEGRATION / "translations" / "ru.json").read_text(encoding="utf-8")
         )
-        self.assertEqual(hacs["name"], "VLESS Gateway")
+        self.assertEqual(hacs["name"], "NikaS VLESS Gateway")
         self.assertEqual(strings, translation)
 
 
