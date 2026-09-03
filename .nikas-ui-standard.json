@@ -1,28 +1,57 @@
 {
-  "version": "1.9",
-  "navigation_contract_version": "1.1",
+  "version": "2.2",
+  "navigation_contract_version": "1.2",
   "standard_path": "docs/NIKAS_SPECIALIZED_PANEL_UI_STANDARD.md",
-  "standard_sha256": "f02b40c0e16d49ced98f3f099382ede1798837e1d709cb8934787c110455fb9c",
+  "standard_sha256": "3b6cc750b08aa0d2a375d1430ea04ac68c90525a527d197b014abd96728d23d1",
   "navigation_contract_path": "docs/NIKAS_PANEL_NAVIGATION_CONTRACT.md",
-  "navigation_contract_sha256": "c87dc760c0900701f6a807a35aba40e790f68f52c39f4579583598f697997e52",
+  "navigation_contract_sha256": "d495eca80345b96976c168029a96146803f3d8195b6f6fc723827b601ffb578e",
   "role": "specialized",
   "artifact_kind": "production",
   "runtime_files": [
     "custom_components/vless_gateway/frontend/vless-gateway-panel.js"
   ],
   "production_entrypoint": "custom_components/vless_gateway/frontend/vless-gateway-panel.js",
+  "header_return_runtime_path": "custom_components/vless_gateway/frontend/vless-gateway-panel.js",
   "build_source_files": [
     "scripts/build-frontend-bundle.mjs",
+    "custom_components/vless_gateway/frontend/src/nikas-specialized-shell.js",
     "custom_components/vless_gateway/frontend/src/zoom-controller.js",
     "custom_components/vless_gateway/frontend/src/vless-gateway-panel.js"
   ],
-  "ui_version": "0.1.0",
+  "ui_version": "0.1.1",
   "web_component": "vless-gateway-panel",
   "bundle_contract": {
     "autonomous": true,
     "runtime_imports": false,
     "deterministic": true,
     "cache_busting": "ui_version"
+  },
+  "source_kit": {
+    "path": "custom_components/vless_gateway/frontend/src/nikas-specialized-shell.js",
+    "sha256": "c7171560b68e2c4118b327c5e6a63c65e3410a4e1f10a02691e0d15560166e65",
+    "delivery": "vendored-build-time",
+    "runtime_dependency": false
+  },
+  "shell_contract": {
+    "version": "2.1",
+    "host_boundary": "ha-panel",
+    "header_body_px": 60,
+    "peer_selector_px": 52,
+    "bottom_nav_body_px": 64,
+    "content_max_width_px": 1280,
+    "coordinate_tolerance_px": 2,
+    "scroll_boundary_guard": "capture-non-passive-touchmove",
+    "specialized_tab_range": [
+      3,
+      5
+    ],
+    "viewport_matrix": {
+      "phone_portrait": "430x932",
+      "phone_landscape": "932x430",
+      "tablet_portrait": "768x1024",
+      "tablet_landscape": "1024x768",
+      "desktop": "1440x900"
+    }
   },
   "data_truth": {
     "entity_source": "integration_or_ha_registry",
@@ -35,26 +64,75 @@
     ]
   },
   "header_return": {
-    "button_marker": "class=\"header-title\" id=\"return-source\"",
+    "button_marker": "class=\"nikas-shell__title\" id=\"return-source\"",
     "version_marker": "UI v${normalized}",
-    "focus_marker": ".header-title:focus-visible",
-    "pressed_marker": ".header-title:active",
-    "explicit_precedence_marker": "[\"return_to\", \"from\"]",
-    "capture_once_marker": "this._returnRoute = resolveReturnRoute(this)",
-    "timestamp_required_marker": "handedOffRaw !== null",
-    "future_timestamp_rejection_marker": "handedOffAge >= 0"
+    "focus_marker": ".nikas-shell__title:focus-visible",
+    "pressed_marker": ".nikas-shell__title:active",
+    "explicit_precedence_marker": "...params.getAll(\"return_to\")",
+    "capture_once_marker": "this._returnRoute = captureNikasShellReturnRoute({",
+    "timestamp_required_marker": "if (!route || !timestamp)",
+    "future_timestamp_rejection_marker": "age < 0"
   },
   "forbidden_runtime_markers": [
     "history.back("
   ],
+  "header_reference": {
+    "implementation": "S8 OMNI",
+    "implementation_source": "NikaSir/ha-s8-omni",
+    "background_primary_mix_percent": 97,
+    "divider_mix_percent": 70,
+    "blur_px": 18,
+    "saturation_percent": 130,
+    "side_action_size_px": 44,
+    "side_action_radius_px": 16,
+    "side_action_border_divider_mix_percent": 72,
+    "side_action_shadow": "0 7px 20px rgba(23,45,76,.08)"
+  },
   "title_plaque_reference": {
-    "implementation": "LIDER",
-    "min_width": "min(290px,100%)",
-    "min_height_px": 44,
+    "implementation": "S8 OMNI",
+    "implementation_source": "NikaSir/ha-s8-omni",
+    "width": "min(360px,100%)",
+    "height_px": 52,
     "padding_px": "5 14",
     "radius_px": 16,
     "primary_background_mix_percent": 5,
     "primary_border_mix_percent": 24,
     "shadow": "0 5px 16px rgba(23,45,76,.06)"
+  },
+  "panel_identity": {
+    "title": "VLESS Gateway"
+  },
+  "shell_scroll_guard": {
+    "implementation_version": "2.1",
+    "strategy": "capture_non_passive_host_boundary_guard",
+    "scroll_chaining": false,
+    "multitouch_passthrough": true,
+    "movement_threshold_px": 4,
+    "cleanup_on_disconnect": true
+  },
+  "peer_device_status_lamp_reference": {
+    "implementation": "Stark SolarPower",
+    "visual_lineage": "StarLine",
+    "diameter_px": 9,
+    "halo_px": 3,
+    "states": {
+      "good": "green",
+      "warning": "orange",
+      "fault": "red",
+      "unknown": "gray"
+    },
+    "state_priority": [
+      "fault",
+      "warning",
+      "good",
+      "unknown"
+    ],
+    "selection_is_independent": true,
+    "update_mode": "point-patch",
+    "accessible_status_required": true
+  },
+  "peer_device_selector": {
+    "enabled": false,
+    "reason": "single gateway panel"
   }
 }

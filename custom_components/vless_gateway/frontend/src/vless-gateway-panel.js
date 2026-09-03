@@ -4,7 +4,7 @@
 
 const VLESS_APP = {
   title: "VLESS Gateway",
-  uiVersion: "0.1.0",
+  uiVersion: "0.1.1",
   domain: "vless_gateway",
   preferredView: "overview",
   tabs: [
@@ -15,82 +15,9 @@ const VLESS_APP = {
   ],
 };
 
-const SOURCE_ROUTE_KEY = "nikas.specialized.source_route.v1";
-const SOURCE_ROUTE_AT_KEY = "nikas.specialized.source_route_at.v1";
-const RETURN_ROUTE_KEY = "nikas.vless_gateway.return_route.v1";
 const SAFE_DEFAULT_ROUTE = "/dashboard-infrastructure/overview";
-const SOURCE_ROUTE_TTL_MS = 30_000;
 const TONES = new Set(["ok", "active", "warn", "bad", "unknown"]);
 const INVALID_STATES = new Set(["", "unknown", "unavailable", "none", "null"]);
-
-function canonicalBaseRoute(pathname) {
-  if (pathname === "/dashboard-house-v11" || pathname.startsWith("/dashboard-house-v11/")) {
-    return "/dashboard-house-v11/home";
-  }
-  if (pathname === "/dashboard-actions" || pathname.startsWith("/dashboard-actions/")) {
-    return "/dashboard-actions/home";
-  }
-  if (pathname === "/dashboard-infrastructure" || pathname.startsWith("/dashboard-infrastructure/")) {
-    return "/dashboard-infrastructure/overview";
-  }
-  return null;
-}
-
-function safeReturnRoute(value) {
-  if (!value) return null;
-  try {
-    const url = new URL(decodeURIComponent(String(value).trim()), window.location.origin);
-    if (url.origin !== window.location.origin) return null;
-    return canonicalBaseRoute(url.pathname);
-  } catch (_error) {
-    return null;
-  }
-}
-
-function resolveReturnRoute(panel) {
-  const current = new URL(window.location.href);
-  const explicit = ["return_to", "from"]
-    .map((key) => safeReturnRoute(current.searchParams.get(key)))
-    .find(Boolean) || null;
-  let handedOff = null;
-  let saved = null;
-  try {
-    const handedOffRaw = sessionStorage.getItem(SOURCE_ROUTE_KEY);
-    const handedOffAtRaw = sessionStorage.getItem(SOURCE_ROUTE_AT_KEY);
-    sessionStorage.removeItem(SOURCE_ROUTE_KEY);
-    sessionStorage.removeItem(SOURCE_ROUTE_AT_KEY);
-    if (handedOffRaw !== null && handedOffAtRaw !== null) {
-      const handedOffAt = Number(handedOffAtRaw);
-      const handedOffAge = Date.now() - handedOffAt;
-      const handoffIsFresh = Number.isFinite(handedOffAt)
-        && handedOffAge >= 0
-        && handedOffAge <= SOURCE_ROUTE_TTL_MS;
-      handedOff = handoffIsFresh ? safeReturnRoute(handedOffRaw) : null;
-    }
-    saved = safeReturnRoute(sessionStorage.getItem(RETURN_ROUTE_KEY));
-  } catch (_error) {
-    // Navigation still has a repository-defined safe fallback.
-  }
-  const configured = safeReturnRoute(panel?._panel?.config?.parent_route);
-  const route = explicit
-    || handedOff
-    || saved
-    || safeReturnRoute(document.referrer)
-    || configured
-    || SAFE_DEFAULT_ROUTE;
-  try {
-    sessionStorage.setItem(RETURN_ROUTE_KEY, route);
-  } catch (_error) {
-    // Session persistence is optional; the captured in-memory route remains valid.
-  }
-  return route;
-}
-
-function navigateToSource(panel) {
-  const route = safeReturnRoute(panel._returnRoute) || SAFE_DEFAULT_ROUTE;
-  window.history.pushState(null, "", route);
-  window.dispatchEvent(new Event("location-changed"));
-}
 
 function escapeHtml(value) {
   return String(value ?? "")
@@ -201,6 +128,7 @@ class VlessGatewayPanel extends HTMLElement {
     this._registryLoading = false;
     this._registryError = null;
     this._connected = false;
+    this._scrollGuardCleanup = null;
   }
 
   set hass(value) {
@@ -229,11 +157,14 @@ class VlessGatewayPanel extends HTMLElement {
 
   connectedCallback() {
     this._connected = true;
+    this._bindShellBoundaryGuard();
     this._queueRender();
   }
 
   disconnectedCallback() {
     this._connected = false;
+    this._scrollGuardCleanup?.();
+    this._scrollGuardCleanup = null;
   }
 
   _config() {
@@ -360,15 +291,15 @@ class VlessGatewayPanel extends HTMLElement {
 
   _renderHeader() {
     const config = this._config();
-    return `<header class="app-header">
-      <button type="button" class="header-action" id="menu" aria-label="Меню Home Assistant">
+    return `<header class="nikas-shell__header">
+      <button type="button" class="nikas-shell__side-action" id="menu" aria-label="Меню Home Assistant">
         <ha-icon icon="mdi:menu"></ha-icon>
       </button>
-      <button type="button" class="header-title" id="return-source" aria-label="Вернуться в базовую панель NikaS">
+      <button type="button" class="nikas-shell__title" id="return-source" aria-label="Вернуться в исходную базовую панель NikaS">
         <strong>${escapeHtml(config.title)}</strong>
-        <span>${escapeHtml(config.versionLine)}</span>
+        <small>${escapeHtml(config.versionLine)}</small>
       </button>
-      <button type="button" class="header-action" id="refresh" aria-label="Обновить отображение">
+      <button type="button" class="nikas-shell__side-action nikas-shell__side-action--right" id="refresh" aria-label="Обновить отображение">
         <ha-icon icon="mdi:refresh"></ha-icon>
       </button>
     </header>`;
@@ -376,12 +307,12 @@ class VlessGatewayPanel extends HTMLElement {
 
   _renderTabBar() {
     const tabs = this._config().tabs;
-    return `<nav class="tabbar" style="--vless-tab-count:${Math.max(1, tabs.length)}" aria-label="Разделы">
+    return `<nav class="nikas-shell__tabs" style="--nikas-shell-tab-count:${Math.max(1, tabs.length)}" aria-label="Разделы">
       ${tabs.map(([view, icon, label]) => {
         const active = this._activeView === view;
         const accessible = view === "diagnostics" ? "Диагностика" : label;
-        return `<button type="button" data-view="${escapeHtml(view)}" class="${active ? "active" : ""}" aria-label="${escapeHtml(accessible)}" aria-current="${active ? "page" : "false"}">
-          <ha-icon icon="${escapeHtml(icon)}"></ha-icon><span>${escapeHtml(label)}</span>
+        return `<button type="button" data-view="${escapeHtml(view)}" class="nikas-shell__tab${active ? " active" : ""}" aria-label="${escapeHtml(accessible)}" aria-current="${active ? "page" : "false"}">
+          <ha-icon icon="${escapeHtml(icon)}"></ha-icon><small>${escapeHtml(label)}</small>
         </button>`;
       }).join("")}
     </nav>`;
@@ -629,7 +560,7 @@ class VlessGatewayPanel extends HTMLElement {
     slot.dataset.viewPage = view;
     slot.hidden = true;
     slot.setAttribute("aria-hidden", "true");
-    this.shadowRoot.querySelector(".work-canvas").appendChild(slot);
+    this.shadowRoot.querySelector(".nikas-shell__canvas").appendChild(slot);
     this._visitedViews.set(view, slot);
     return slot;
   }
@@ -641,7 +572,7 @@ class VlessGatewayPanel extends HTMLElement {
       slot.toggleAttribute("inert", !active);
       slot.setAttribute("aria-hidden", String(!active));
     }
-    this.shadowRoot.querySelectorAll(".tabbar button").forEach((button) => {
+    this.shadowRoot.querySelectorAll(".nikas-shell__tabs button").forEach((button) => {
       const active = button.dataset.view === view;
       button.classList.toggle("active", active);
       button.setAttribute("aria-current", active ? "page" : "false");
@@ -657,7 +588,7 @@ class VlessGatewayPanel extends HTMLElement {
     this._attachEntityInteractions(slot);
     const controller = window.NikasPanelZoom?.attach?.(this, { min: 0.75, max: 2.0 });
     if (controller?.resetPosition) controller.resetPosition();
-    else this.shadowRoot.querySelector(".canvas-viewport").scrollTop = 0;
+    else this.shadowRoot.querySelector(".nikas-shell__viewport").scrollTop = 0;
   }
 
   _openMoreInfo(entityId) {
@@ -744,14 +675,18 @@ class VlessGatewayPanel extends HTMLElement {
 
   _mountShell() {
     if (this._shellMounted) return;
-    this._returnRoute = resolveReturnRoute(this);
-    this.shadowRoot.innerHTML = `<style>${VLESS_PANEL_CSS}</style>
-      <div class="app-shell">
+    this._returnRoute = captureNikasShellReturnRoute({
+      panelId: VLESS_APP.domain,
+      parentRoute: this._panel?.config?.parent_route,
+      safeReturnRoute: SAFE_DEFAULT_ROUTE,
+    });
+    this.shadowRoot.innerHTML = `<style>${nikasShellV2Styles()}${VLESS_PANEL_CSS}</style>
+      <div class="nikas-shell">
         ${this._renderHeader()}
-        <main class="canvas-viewport" aria-label="Рабочая область панели VLESS Gateway">
-          <div class="work-canvas"></div>
+        <main class="nikas-shell__viewport canvas-viewport" aria-label="Рабочая область панели VLESS Gateway">
+          <div class="nikas-shell__canvas nikas-shell__content work-canvas"></div>
         </main>
-        <div class="bottom-slot">${this._renderTabBar()}</div>
+        ${this._renderTabBar()}
         <div class="scale-status" role="status" aria-live="polite">Масштаб 100%</div>
       </div>`;
     this.shadowRoot.addEventListener("click", (event) => {
@@ -760,7 +695,7 @@ class VlessGatewayPanel extends HTMLElement {
       if (button.id === "menu") {
         this.dispatchEvent(new CustomEvent("hass-toggle-menu", { bubbles: true, composed: true }));
       } else if (button.id === "return-source") {
-        navigateToSource(this);
+        navigateNikasShell(this._returnRoute);
       } else if (button.id === "refresh") {
         this._loadRegistry(true);
       } else if (button.dataset.view) {
@@ -768,12 +703,21 @@ class VlessGatewayPanel extends HTMLElement {
       }
     });
     this._shellMounted = true;
+    this._bindShellBoundaryGuard();
+  }
+
+  _bindShellBoundaryGuard() {
+    if (!this._connected || !this._shellMounted || this._scrollGuardCleanup) return;
+    const viewport = this.shadowRoot.querySelector(".nikas-shell__viewport");
+    if (viewport) {
+      this._scrollGuardCleanup = createNikasShellScrollBoundaryGuard({ host: this, viewport });
+    }
   }
 
   _syncChrome() {
     const config = this._config();
-    const title = this.shadowRoot.querySelector(".header-title strong");
-    const subtitle = this.shadowRoot.querySelector(".header-title span");
+    const title = this.shadowRoot.querySelector(".nikas-shell__title strong");
+    const subtitle = this.shadowRoot.querySelector(".nikas-shell__title small");
     if (title.textContent !== config.title) title.textContent = config.title;
     if (subtitle.textContent !== config.versionLine) subtitle.textContent = config.versionLine;
     const refresh = this.shadowRoot.getElementById("refresh");
@@ -794,31 +738,13 @@ class VlessGatewayPanel extends HTMLElement {
 
 const VLESS_PANEL_CSS = `
 :host{
-  display:block;width:100%;height:100dvh;min-height:0;overflow:hidden;
-  color:var(--primary-text-color,#111827);background:var(--primary-background-color,#f4f6f8);
-  font-family:var(--paper-font-body1_-_font-family,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif);
   --vless-surface:var(--ha-card-background,var(--card-background-color,#fff));
   --vless-border:color-mix(in srgb,var(--primary-text-color,#111827) 12%,transparent);
   --vless-muted:var(--secondary-text-color,#6b7280);
   --vless-primary:var(--primary-color,#03a9f4);
   --vless-ok:#35a853;--vless-warn:#e19b00;--vless-bad:#d94b4b;--vless-unknown:#7b8794;
 }
-*{box-sizing:border-box}
-button{font:inherit}
-.app-shell{position:relative;width:100%;height:100dvh;min-height:0;display:grid;grid-template-rows:auto minmax(0,1fr) auto;overflow:hidden;background:var(--primary-background-color,#f4f6f8)}
-.app-header{z-index:20;display:grid;grid-template-columns:52px minmax(0,1fr) 52px;align-items:center;min-height:62px;padding:max(5px,env(safe-area-inset-top,0px)) max(8px,env(safe-area-inset-right,0px)) 5px max(8px,env(safe-area-inset-left,0px));background:var(--vless-surface);border-bottom:1px solid var(--vless-border);box-shadow:0 2px 12px rgba(0,0,0,.06)}
-.header-action{width:44px;height:44px;min-width:44px;border:1px solid var(--vless-border);border-radius:16px;background:var(--vless-surface);color:var(--primary-text-color,#111827);display:grid;place-items:center;padding:0;box-shadow:0 7px 20px rgba(23,45,76,.08);cursor:pointer;-webkit-tap-highlight-color:transparent}
-.header-action ha-icon{--mdc-icon-size:25px;width:25px;height:25px}.header-action#refresh{color:var(--vless-primary)}
-.header-action:focus-visible,.tabbar button:focus-visible{outline:2px solid var(--vless-primary);outline-offset:1px}
-.header-action.busy ha-icon{animation:vless-spin .9s linear infinite}
-.header-title{justify-self:center;min-width:min(290px,100%);max-width:100%;min-height:44px;border:1px solid color-mix(in srgb,var(--primary-color,#03a9d9) 24%,var(--divider-color,#dfe3e8));border-radius:16px;background:color-mix(in srgb,var(--primary-color,#03a9d9) 5%,var(--card-background-color,#fff));color:var(--primary-text-color,#111827);text-align:center;line-height:1.1;padding:5px 14px;box-shadow:0 5px 16px rgba(23,45,76,.06);cursor:pointer;-webkit-tap-highlight-color:transparent}
-.header-title:active{background:color-mix(in srgb,var(--primary-color,#03a9d9) 13%,var(--card-background-color,#fff));border-color:color-mix(in srgb,var(--primary-color,#03a9d9) 42%,var(--divider-color,#dfe3e8));box-shadow:0 2px 7px rgba(23,45,76,.05);transform:scale(.985)}
-.header-title:focus-visible{outline:2px solid var(--primary-color,#03a9d9);outline-offset:2px}
-.header-title strong,.header-title span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.header-title strong{font-size:23px;font-weight:800;letter-spacing:-.02em}.header-title span{margin-top:3px;color:var(--vless-muted);font-size:14px;font-weight:560}
-.canvas-viewport{position:relative;min-width:0;min-height:0;overflow-x:hidden;overflow-y:auto;overscroll-behavior-x:none;overscroll-behavior-y:none;touch-action:pan-y;-webkit-overflow-scrolling:touch;background:var(--primary-background-color,#f4f6f8)}
-.canvas-viewport.zoomed{overflow:hidden;overscroll-behavior:none;touch-action:none;user-select:none;-webkit-user-select:none}
-.work-canvas{position:relative;width:min(calc(100% - 24px),1280px);min-height:100%;margin:0 auto;padding:14px 0 22px;transform-origin:0 0;will-change:transform}
-.canvas-viewport.zoomed .work-canvas{position:absolute;left:12px;right:12px;width:auto;margin:0}
+.nikas-shell__side-action#refresh.busy ha-icon{animation:vless-spin .9s linear infinite}
 .view-page[hidden]{display:none!important}.view-page{display:block;min-height:100%}
 .card{border:1px solid var(--vless-border);border-radius:22px;background:var(--vless-surface);padding:18px;margin-bottom:14px;box-shadow:0 2px 10px color-mix(in srgb,#000 5%,transparent)}
 .card h1,.card h2,.card p{margin:0}.card h1{font-size:25px;line-height:1.15}.card h2{font-size:18px;line-height:1.25}.card p{margin-top:7px;color:var(--vless-muted);font-size:14px;line-height:1.42}
@@ -834,13 +760,11 @@ button{font:inherit}
 .diagnostics-intro{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.identity-card h2{margin-bottom:8px}.diagnostic-grid{display:grid;grid-template-columns:1fr;gap:14px}.raw-entity{min-width:0;border:1px solid var(--vless-border);border-radius:22px;background:var(--vless-surface);padding:16px;box-shadow:0 2px 10px color-mix(in srgb,#000 4%,transparent)}.raw-title{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:9px}.raw-title>span{min-width:0;display:flex;align-items:center;gap:8px}.raw-title strong{min-width:0;overflow-wrap:anywhere;font-size:16px}.raw-title>ha-icon{--mdc-icon-size:19px;color:var(--vless-muted)}.raw-row{display:grid;grid-template-columns:minmax(105px,.75fr) minmax(0,1.25fr);gap:10px;align-items:start;padding:8px 0;border-top:1px solid var(--vless-border);font-size:12px;line-height:1.35}.raw-row>span{min-width:0;color:var(--vless-muted);overflow-wrap:anywhere}.raw-row>strong{min-width:0;text-align:right;overflow-wrap:anywhere;font-weight:650}
 .entity-backed{cursor:context-menu;-webkit-tap-highlight-color:transparent}.entity-backed:focus-visible{outline:2px solid var(--vless-primary);outline-offset:2px}
 .loading{display:grid;gap:12px}.loading>span{color:var(--vless-muted);text-align:center;font-size:14px}.skeleton{border-radius:20px;background:color-mix(in srgb,var(--primary-text-color,#111827) 7%,transparent)}.hero-skeleton{min-height:140px}.row-skeleton{min-height:82px}
-.bottom-slot{z-index:20}.tabbar{width:100%;display:grid;grid-template-columns:repeat(var(--vless-tab-count),minmax(0,1fr));gap:4px;padding:6px max(8px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-left,0px));background:var(--vless-surface);border-top:1px solid var(--vless-border);box-shadow:0 -4px 18px color-mix(in srgb,#000 8%,transparent)}.tabbar button{min-width:0;min-height:52px;border:0;border-radius:16px;background:transparent;color:var(--vless-muted);display:grid;place-items:center;align-content:center;gap:3px;padding:4px 2px;cursor:pointer;-webkit-tap-highlight-color:transparent}.tabbar button.active{color:var(--vless-primary);background:color-mix(in srgb,var(--vless-primary) 11%,transparent);cursor:default}.tabbar ha-icon{--mdc-icon-size:28px;width:28px;height:28px}.tabbar span{width:100%;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;line-height:15px;font-weight:700}
 .scale-status{position:absolute;z-index:40;left:50%;bottom:calc(76px + env(safe-area-inset-bottom,0px));transform:translate(-50%,10px);opacity:0;pointer-events:none;padding:9px 14px;border-radius:999px;background:rgba(20,27,34,.88);color:#fff;font-size:13px;font-weight:720;white-space:nowrap;transition:opacity .14s ease,transform .14s ease}.scale-status.visible{opacity:1;transform:translate(-50%,0)}
 @keyframes vless-spin{to{transform:rotate(360deg)}}
-@media(max-width:680px){:host{position:fixed;inset:0;width:auto;height:auto}.app-shell{position:absolute;inset:0;width:auto;height:auto}}
-@media(max-width:390px){.app-header{grid-template-columns:48px minmax(0,1fr) 48px;min-height:60px}.header-title{min-width:0;width:100%;padding-inline:8px}.header-title strong{font-size:21px}.header-title span{font-size:13px}.work-canvas{width:min(calc(100% - 20px),1280px)}.canvas-viewport.zoomed .work-canvas{left:10px;right:10px}.hero-card{padding:17px}.status-badge{padding-inline:7px}.state-row{grid-template-columns:26px minmax(0,1fr) minmax(82px,auto) 18px}}
-@media(min-width:760px){.metric-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.route-flow{flex-direction:row;align-items:stretch}.flow-node{flex:1 1 0}.flow-arrow{transform:none}.diagnostic-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(min-width:1100px){.metric-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@container nikas-panel (max-width:390px){.hero-card{padding:17px}.status-badge{padding-inline:7px}.state-row{grid-template-columns:26px minmax(0,1fr) minmax(82px,auto) 18px}}
+@container nikas-panel (min-width:760px){.metric-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.route-flow{flex-direction:row;align-items:stretch}.flow-node{flex:1 1 0}.flow-arrow{transform:none}.diagnostic-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@container nikas-panel (min-width:1100px){.metric-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media(prefers-reduced-motion:reduce){.scale-status{transition:none}.header-action.busy ha-icon{animation:none}}
 `;
 

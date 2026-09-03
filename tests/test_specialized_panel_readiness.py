@@ -16,7 +16,7 @@ class SpecializedPanelReadinessTests(unittest.TestCase):
         cls.contract = json.loads(CONTRACT.read_text(encoding="utf-8"))
 
     def test_installable_scaffold_is_declared_truthfully(self) -> None:
-        self.assertEqual(self.contract["standard_version"], "1.9")
+        self.assertEqual(self.contract["standard_version"], "2.2")
         self.assertEqual(self.contract["repository_state"], "installable_panel_scaffold")
         self.assertTrue(self.contract["integration"]["present"])
         self.assertTrue(self.contract["integration"]["config_flow_present"])

@@ -19,15 +19,16 @@ class IntegrationContractTests(unittest.TestCase):
         panel = (INTEGRATION / "panel.py").read_text(encoding="utf-8")
 
         self.assertEqual(manifest["domain"], "vless_gateway")
-        self.assertEqual(manifest["version"], "0.1.1")
+        self.assertEqual(manifest["version"], "0.1.2")
         self.assertTrue(manifest["config_flow"])
-        self.assertEqual(panel_manifest["ui_version"], "0.1.0")
+        self.assertEqual(panel_manifest["ui_version"], "0.1.1")
+        self.assertEqual(panel_manifest["template_version"], "2.2")
         self.assertEqual(panel_manifest["path"], "/dashboard-vless-gateway")
         self.assertEqual(
             panel_manifest["parent_route"], "/dashboard-infrastructure/overview"
         )
-        self.assertIn('INTEGRATION_VERSION = "0.1.1"', constants)
-        self.assertIn('PANEL_UI_VERSION = "0.1.0"', constants)
+        self.assertIn('INTEGRATION_VERSION = "0.1.2"', constants)
+        self.assertIn('PANEL_UI_VERSION = "0.1.1"', constants)
         self.assertIn('?v={PANEL_UI_VERSION}', panel)
 
     def test_panel_is_read_only_and_does_not_invent_entities(self) -> None:

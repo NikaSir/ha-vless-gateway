@@ -11,7 +11,7 @@ The Home Assistant repository must not duplicate gateway configuration or store 
 
 ## Current scope
 
-Version `0.1.0` is an installable read-only visual scaffold. It registers the panel, renders the final application shell and exposes the intended information architecture without claiming that the gateway API already exists.
+UI version `0.1.1` is an installable read-only visual scaffold. It registers the panel, renders the host-bound NikaS UI v2.2 / Shell v2.1 application shell and exposes the intended information architecture without claiming that the gateway API already exists.
 
 Views:
 
@@ -55,4 +55,4 @@ node scripts/build-frontend-bundle.mjs --check
 node --check custom_components/vless_gateway/frontend/vless-gateway-panel.js
 ```
 
-The production module is a single autonomous bundle. The source files under `frontend/src` are build inputs only and are never imported at runtime.
+The production module is a single autonomous bundle. The vendored Shell v2.1 source kit and the other files under `frontend/src` are build inputs only and are never imported at runtime.

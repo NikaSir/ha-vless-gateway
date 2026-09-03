@@ -9,7 +9,7 @@
 
 ## Version lineage
 
-Integration and UI versions are explicit numeric `X.Y.Z` values. Version `0.1.0` identifies the first installable read-only panel scaffold; it does not claim that the separate gateway management API is implemented.
+Integration and UI versions are explicit numeric `X.Y.Z` values. UI version `0.1.1` identifies the host-bound NikaS UI v2.2 migration of the installable read-only panel scaffold; it does not claim that the separate gateway management API is implemented.
 
 The integration manifest, panel metadata, production bundle cache key and visible `UI vX.Y.Z` line must remain coherent for every accepted update.
 
