@@ -52,11 +52,12 @@ jobs:
         run: |
           node scripts/build-frontend-bundle.mjs --check
           node --check custom_components/vless_gateway/frontend/vless-gateway-panel.js
+          node tests/shell_v2_harness.mjs
 
       - name: Verify integration and specialized-panel contracts
         run: python -m unittest discover -s tests -v
 
-      - name: Enforce NikaS UI standard v1.9
+      - name: Enforce NikaS UI standard v2.2
         run: python scripts/check_nikas_ui_standard.py
 
       - name: Validate approved repository icon

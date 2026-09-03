@@ -49,25 +49,27 @@ class FrontendContractTests(unittest.TestCase):
         self.assertIsNone(re.search(r"^\s*(?:import|export)\b", executable, re.MULTILINE))
         self.assertNotRegex(executable, r"\bimport\s*\(")
         self.assertIn('customElements.define("vless-gateway-panel"', self.bundle)
-        self.assertIn("0.1.0", self.bundle)
+        self.assertIn("0.1.1", self.bundle)
+        self.assertIn('const NIKAS_SHELL_V2_VERSION = "2.1"', self.bundle)
 
     def test_navigation_contract_is_source_aware(self) -> None:
         for marker in (
             "nikas.specialized.source_route.v1",
             "nikas.specialized.source_route_at.v1",
-            "/dashboard-house-v11/home",
+            "/dashboard-house-v13/home",
+            "/dashboard-rooms-v11/rooms",
             "/dashboard-actions/home",
             "/dashboard-infrastructure/overview",
-            '["return_to", "from"]',
+            '...params.getAll("return_to")',
             "history.pushState",
             "location-changed",
             "document.referrer",
         ):
             self.assertIn(marker, self.bundle)
         self.assertNotIn("history.back(", self.bundle)
-        self.assertIn('class="header-title" id="return-source"', self.bundle)
-        self.assertIn(".header-title:focus-visible", self.bundle)
-        self.assertIn(".header-title:active", self.bundle)
+        self.assertIn('class="nikas-shell__title" id="return-source"', self.bundle)
+        self.assertIn(".nikas-shell__title:focus-visible", self.bundle)
+        self.assertIn(".nikas-shell__title:active", self.bundle)
 
     def test_shell_and_views_remain_stable(self) -> None:
         self.assertEqual(self.source.count("this.shadowRoot.innerHTML ="), 1)
@@ -75,9 +77,9 @@ class FrontendContractTests(unittest.TestCase):
             "this._visitedViews = new Map()",
             "slot.toggleAttribute(\"inert\", !active)",
             "commitStableMarkup(slot",
-            'class="canvas-viewport"',
-            'class="work-canvas"',
-            'class="tabbar"',
+            'class="nikas-shell__viewport canvas-viewport"',
+            'class="nikas-shell__canvas nikas-shell__content work-canvas"',
+            'class="nikas-shell__tabs"',
         ):
             self.assertIn(marker, self.source)
 
@@ -90,6 +92,7 @@ class FrontendContractTests(unittest.TestCase):
             "twoFingerTap",
             "resetPosition()",
             "Масштаб 100%",
+            "createNikasShellScrollBoundaryGuard",
         ):
             self.assertIn(marker, self.bundle)
 
@@ -111,6 +114,20 @@ class FrontendContractTests(unittest.TestCase):
         self.assertTrue(sizes)
         self.assertGreaterEqual(min(sizes), 12)
         self.assertLessEqual(max(sizes), 25)
+
+    def test_host_bound_shell_v22_geometry_is_embedded(self) -> None:
+        for marker in (
+            "block-size:100%",
+            "calc(60px + env(safe-area-inset-top,0px))",
+            "calc(64px + env(safe-area-inset-bottom,0px))",
+            "max-inline-size:1280px",
+            "--nikas-shell-tab-count",
+            "--mdc-icon-size:26px",
+            'host.addEventListener("touchmove", moveTouch, { passive: false, capture: true })',
+        ):
+            self.assertIn(marker, self.bundle)
+        for forbidden in ("100vw", "100vh", "100dvh", "position:fixed"):
+            self.assertNotIn(forbidden, self.source)
 
     def test_data_truth_is_explicit_and_read_only(self) -> None:
         self.assertIn("Нет данных", self.bundle)

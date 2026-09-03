@@ -2,11 +2,11 @@
   "schema_version": 1,
   "repository": "ha-vless-gateway",
   "standard": "NikaS Specialized Panel UI Standard",
-  "standard_version": "1.9",
+  "standard_version": "2.2",
   "repository_state": "installable_panel_scaffold",
   "integration": {
     "domain": "vless_gateway",
-    "version": "0.1.0",
+    "version": "0.1.2",
     "present": true,
     "config_flow_present": true,
     "hacs_package_present": true,
@@ -67,11 +67,17 @@
       "subtitle_px_narrow": 13
     },
     "bottom_navigation": {
-      "icon_px": 28,
+      "icon_px": 26,
       "label_px": 12,
       "label_weight": 700,
       "safe_area": true
     },
-    "meaningful_font_range_px": [12, 25]
+    "meaningful_font_range_px": [12, 25],
+    "host_boundary": "ha-panel",
+    "shell_version": "2.1",
+    "header_body_px": 60,
+    "bottom_navigation_body_px": 64,
+    "content_max_width_px": 1280,
+    "scroll_boundary_guard": "capture_non_passive_touchmove"
   }
 }

@@ -6,14 +6,15 @@
   "icon": "mdi:shield-lock-outline",
   "owner": "vless_gateway",
   "preferred_view": "overview",
-  "ui_version": "0.1.0",
-  "template_version": "1.9",
+  "ui_version": "0.1.1",
+  "template_version": "2.2",
   "module_url": "vless-gateway-panel.js",
   "read_only": true,
   "tabs": ["overview", "routes", "traffic", "diagnostics"],
   "frontend_delivery": {
     "mode": "self_contained_bundle",
     "source_modules": [
+      "frontend/src/nikas-specialized-shell.js",
       "frontend/src/zoom-controller.js",
       "frontend/src/vless-gateway-panel.js"
     ],
@@ -43,7 +44,8 @@
     "header_history_back_allowed": false,
     "header_safe_default_route": "/dashboard-infrastructure/overview",
     "header_allowed_base_routes": [
-      "/dashboard-house-v11/home",
+      "/dashboard-house-v13/home",
+      "/dashboard-rooms-v11/rooms",
       "/dashboard-actions/home",
       "/dashboard-infrastructure/overview"
     ],
@@ -53,10 +55,16 @@
     "bottom_tabs_single_row": true,
     "bottom_tab_columns": 4,
     "bottom_tab_min_height_px": 52,
-    "bottom_icon_px": 28,
+    "bottom_icon_px": 26,
     "bottom_label_px": 12,
     "bottom_full_width": true,
-    "safe_area_once": true
+    "safe_area_once": true,
+    "host_boundary": "ha-panel",
+    "shell_version": "2.1",
+    "header_body_px": 60,
+    "bottom_navigation_body_px": 64,
+    "content_max_width_px": 1280,
+    "scroll_boundary_guard": "capture_non_passive_touchmove"
   },
   "zoom": {
     "viewport_count": 1,

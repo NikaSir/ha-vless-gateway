@@ -8,8 +8,8 @@ Installable read-only panel scaffold for the separate **VLESS Gateway** project.
 
 ## Status
 
-- Integration version: `0.1.0`.
-- Panel UI version: `0.1.0`.
+- Integration version: `0.1.2`.
+- Panel UI version: `0.1.1`.
 - Home Assistant route: `/dashboard-vless-gateway`.
 - Parent section: **Инфраструктура** (`/dashboard-infrastructure/overview`).
 - Views: **Обзор**, **Маршруты**, **Трафик**, **Диагн.**
@@ -32,11 +32,12 @@ No gateway credentials, private keys, UUIDs, access tokens, server addresses or 
 
 ## Panel composition
 
-The panel follows **NikaS Specialized Panel UI Standard v1.9**:
+The panel follows **NikaS Specialized Panel UI Standard v2.2**, **Navigation Contract v1.2** and host-bound **Shell v2.1**:
 
-- fixed Home Assistant menu Header with LIDER-style title/return plaque;
+- fixed Home Assistant menu Header with the current S8 OMNI title/return geometry;
 - one gesture-driven work viewport;
 - fixed full-width safe-area-aware Bottom Tab Bar;
+- host-bound sizing without `100dvh`, fixed-position takeover or Home Assistant outer-page scrolling;
 - 75–200% focal pinch, 97–103% snap and two-finger double-tap reset;
 - native vertical scrolling at 100%, bounded one-finger pan only above 100%;
 - stable shell DOM and lazy persistent tab subtrees;
@@ -59,6 +60,7 @@ This first version does not require gateway credentials because it does not conn
 ```bash
 node scripts/build-frontend-bundle.mjs --check
 node --check custom_components/vless_gateway/frontend/vless-gateway-panel.js
+node tests/shell_v2_harness.mjs
 python -m unittest discover -s tests -v
 python scripts/check_nikas_ui_standard.py
 ```

@@ -6,6 +6,11 @@ All notable project changes are recorded here.
 
 ### Changed
 
+- Migrate the panel to NikaS Specialized Panel UI Standard v2.2, Navigation Contract v1.2 and vendored host-bound Shell v2.1.
+- Bump the integration to `0.1.2` and the panel UI to `0.1.1` with coherent cache busting.
+- Replace viewport takeover sizing with the `ha-panel` boundary, canonical 60px Header, 64px Bottom Tab Bar and capture-phase iOS scroll-boundary guard.
+- Keep all four views read-only, preserve explicit missing-data states and leave the optional connection indicator disabled.
+
 - Bump the integration to `0.1.1`, prefix the Home Assistant/HACS name with `NikaS`
   and republish the approved local brand icon.
 - Ship a standards-compliant 256×256 `icon.png` plus 512×512 `icon@2x.png`.
