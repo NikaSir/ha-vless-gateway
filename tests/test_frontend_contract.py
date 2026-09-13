@@ -49,10 +49,12 @@ class FrontendContractTests(unittest.TestCase):
         self.assertIsNone(re.search(r"^\s*(?:import|export)\b", executable, re.MULTILINE))
         self.assertNotRegex(executable, r"\bimport\s*\(")
         self.assertIn('customElements.define("vless-gateway-panel"', self.bundle)
-        self.assertIn("0.1.1", self.bundle)
+        self.assertIn("0.1.2", self.bundle)
         self.assertIn('const NIKAS_SHELL_V2_VERSION = "2.1"', self.bundle)
 
-    def test_navigation_contract_is_source_aware(self) -> None:
+    def test_navigation_contract_is_parent_only(self) -> None:
+        import subprocess
+        subprocess.run(["node", "tests/header_parent_navigation.mjs"], cwd=ROOT, check=True)
         for marker in (
             "nikas.specialized.source_route.v1",
             "nikas.specialized.source_route_at.v1",
@@ -60,10 +62,8 @@ class FrontendContractTests(unittest.TestCase):
             "/dashboard-rooms-v11/rooms",
             "/dashboard-actions/home",
             "/dashboard-infrastructure/overview",
-            '...params.getAll("return_to")',
             "history.pushState",
             "location-changed",
-            "document.referrer",
         ):
             self.assertIn(marker, self.bundle)
         self.assertNotIn("history.back(", self.bundle)

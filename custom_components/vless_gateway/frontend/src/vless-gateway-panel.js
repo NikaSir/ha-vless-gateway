@@ -4,7 +4,7 @@
 
 const VLESS_APP = {
   title: "VLESS Gateway",
-  uiVersion: "0.1.1",
+  uiVersion: "0.1.2",
   domain: "vless_gateway",
   preferredView: "overview",
   tabs: [
@@ -15,7 +15,7 @@ const VLESS_APP = {
   ],
 };
 
-const SAFE_DEFAULT_ROUTE = "/dashboard-infrastructure/overview";
+const SAFE_DEFAULT_ROUTE = "/home/overview";
 const TONES = new Set(["ok", "active", "warn", "bad", "unknown"]);
 const INVALID_STATES = new Set(["", "unknown", "unavailable", "none", "null"]);
 
@@ -295,7 +295,7 @@ class VlessGatewayPanel extends HTMLElement {
       <button type="button" class="nikas-shell__side-action" id="menu" aria-label="Меню Home Assistant">
         <ha-icon icon="mdi:menu"></ha-icon>
       </button>
-      <button type="button" class="nikas-shell__title" id="return-source" aria-label="Вернуться в исходную базовую панель NikaS">
+      <button type="button" class="nikas-shell__title" id="return-source" aria-label="Вернуться на главную панель">
         <strong>${escapeHtml(config.title)}</strong>
         <small>${escapeHtml(config.versionLine)}</small>
       </button>
