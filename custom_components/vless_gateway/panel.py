@@ -13,7 +13,7 @@ from .const import DOMAIN, PANEL_UI_VERSION
 PANEL_ID = "vless-gateway"
 PANEL_TITLE = "VLESS Gateway"
 PANEL_URL_PATH = "dashboard-vless-gateway"
-PANEL_PARENT_ROUTE = "/dashboard-infrastructure/overview"
+PANEL_PARENT_ROUTE = "/home/overview"
 PANEL_ICON = "mdi:shield-lock-outline"
 PANEL_WEB_COMPONENT = "vless-gateway-panel"
 PANEL_TEMPLATE_VERSION = "2.2"
