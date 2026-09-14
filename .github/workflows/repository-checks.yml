@@ -11,7 +11,7 @@ permissions:
   contents: read
 
 jobs:
-  validate:
+  repository-checks:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
@@ -99,3 +99,52 @@ jobs:
           python scripts/check_standard_documents.py
           python tests/test_standard_document_sync.py
 
+  hacs-validation:
+    name: HACS validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate integration repository with HACS
+        uses: hacs/action@main
+        with:
+          category: integration
+
+  hassfest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+      - name: Validate integration with Hassfest
+        uses: home-assistant/actions/hassfest@master
+
+  validate:
+    if: ${{ always() }}
+    needs: [repository-checks, hacs-validation, hassfest]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require repository checks, HACS, and Hassfest to pass
+        shell: bash
+        env:
+          VLESS_JOB_RESULTS: ${{ toJSON(needs) }}
+        run: |
+          python3 - <<'PYGATE'
+          import json
+          import os
+          import sys
+
+          required = {"repository-checks", "hacs-validation", "hassfest"}
+          results = json.loads(os.environ["VLESS_JOB_RESULTS"])
+          if not isinstance(results, dict) or set(results) != required:
+              sys.exit("Required CI job results are missing or unexpected")
+          failed = {
+              name: results[name].get("result")
+              for name in sorted(required)
+              if not isinstance(results[name], dict)
+              or results[name].get("result") != "success"
+          }
+          if failed:
+              sys.exit(f"Required CI jobs did not succeed: {failed}")
+          print(
+              "Repository checks, HACS, and Hassfest succeeded; "
+              "runtime acceptance remains separate."
+          )
+          PYGATE
