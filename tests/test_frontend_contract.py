@@ -26,6 +26,9 @@ SOURCE = (
 
 
 class FrontendContractTests(unittest.TestCase):
+    def test_traffic_scope_and_gateway_state_labels(self):
+        subprocess.run(["node", "tests/telemetry_display.mjs"], cwd=ROOT, check=True)
+
     @classmethod
     def setUpClass(cls) -> None:
         cls.bundle = BUNDLE.read_text(encoding="utf-8")

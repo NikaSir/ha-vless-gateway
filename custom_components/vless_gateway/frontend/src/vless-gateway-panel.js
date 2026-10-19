@@ -207,10 +207,10 @@ class VlessGatewayPanel extends HTMLElement {
     if (["on", "ok", "healthy", "connected", "running", "active", "ready", "home"].includes(value)) {
       return "ok";
     }
-    if (["warning", "warn", "degraded", "slow", "standby", "reconnecting"].includes(value)) {
+    if (["warning", "warn", "degraded", "degraded_fail_open", "starting", "slow", "standby", "reconnecting"].includes(value)) {
       return "warn";
     }
-    if (["off", "error", "failed", "fault", "disconnected", "blocked", "stopped"].includes(value)) {
+    if (["off", "error", "control_error", "failed", "fault", "disconnected", "blocked", "stopped"].includes(value)) {
       return "bad";
     }
     return "active";
@@ -235,6 +235,9 @@ class VlessGatewayPanel extends HTMLElement {
       standby: "Ожидание",
       warning: "Внимание",
       degraded: "Деградация",
+      degraded_fail_open: "DIRECT: резервный режим",
+      control_error: "Ошибка управления",
+      starting: "Запуск",
       error: "Ошибка",
       failed: "Сбой",
       stopped: "Остановлено",
@@ -445,12 +448,12 @@ class VlessGatewayPanel extends HTMLElement {
     return `<article class="card view-intro">
         <span class="eyebrow">СЕТЕВАЯ НАГРУЗКА</span>
         <h1>Трафик</h1>
-        <p>Текущая скорость, объём защищённого трафика и число соединений.</p>
+        <p>Трафик через sing-box: DIRECT и VLESS. Обход sing-box через ядро в эти счётчики не входит.</p>
       </article>
       <section class="metric-grid" aria-label="Текущий трафик">
         ${this._renderMetric("Приём", "download_rate", "mdi:download-network-outline")}
         ${this._renderMetric("Передача", "upload_rate", "mdi:upload-network-outline")}
-        ${this._renderMetric("Через VLESS", "routed_traffic", "mdi:shield-check-outline")}
+        ${this._renderMetric("Трафик sing-box", "routed_traffic", "mdi:chart-areaspline")}
         ${this._renderMetric("Соединения", "active_connections", "mdi:connection")}
       </section>
       <article class="card state-card">

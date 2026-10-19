@@ -12,7 +12,7 @@ SENSOR_ROLES = {
     "uptime": "Время работы",
     "download_rate": "Скорость загрузки",
     "upload_rate": "Скорость отправки",
-    "routed_traffic": "Общий трафик",
+    "routed_traffic": "Трафик sing-box",
     "active_connections": "Активные соединения",
     "traffic_today": "Трафик за день",
     "traffic_month": "Трафик за месяц",

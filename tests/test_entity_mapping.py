@@ -19,6 +19,20 @@ def envelope(data, stale=False):
 
 
 class MappingTests(unittest.TestCase):
+    def test_direct_traffic_is_total_sing_box_traffic_not_vless_accounting(self):
+        data = {
+            "status": envelope({"active_route": {"available": True, "value": "direct"}}),
+            "traffic": envelope({"download_total": {"available": True, "value": 120}, "upload_total": {"available": True, "value": 30}}),
+        }
+        self.assertEqual(roles.role_value(data, "routed_traffic"), 150)
+        self.assertEqual(roles.SENSOR_ROLES["routed_traffic"], "Трафик sing-box")
+
+    def test_fresh_selector_loss_does_not_reuse_desired_or_prior_route(self):
+        data = {"status": envelope({"state": "control_error", "desired_route": "de", "active_route": {"available": False, "value": None, "error": "selector_unavailable"}})}
+        self.assertIsNone(roles.role_value(data, "active_route"))
+        self.assertIsNone(roles.role_value(data, "latency"))
+        self.assertEqual(roles.role_value(data, "gateway_status"), "control_error")
+
     def test_available_zero_is_factual_but_unavailable_is_none(self):
         data = {
             "traffic": envelope(
