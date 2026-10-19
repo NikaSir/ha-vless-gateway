@@ -1,4 +1,4 @@
-# VLESS Gateway panel scaffold
+# VLESS Gateway read-only panel
 
 ## Ownership
 
@@ -11,7 +11,7 @@ The Home Assistant repository must not duplicate gateway configuration or store 
 
 ## Current scope
 
-UI version `0.1.1` is an installable read-only visual scaffold. It registers the panel, renders the host-bound NikaS UI v2.2 / Shell v2.1 application shell and exposes the intended information architecture without claiming that the gateway API already exists.
+UI and integration version `1.0.0-beta001` consume gateway API v1 through a shared HA coordinator. The host-bound NikaS UI v2.2 / Shell v2.1 composition and existing navigation are retained. Real-device and phone acceptance remain required.
 
 Views:
 
@@ -24,7 +24,7 @@ Views:
 
 Live cards are bound only through `panel.config.entity_roles`. An absent role renders `Нет данных`; a configured entity missing from `hass.states` renders `Источник недоступен`. The scaffold never searches for a name-shaped entity ID.
 
-Reserved roles for the future verified API:
+Roles backed by the API v1 consumer:
 
 | View | Role |
 |---|---|

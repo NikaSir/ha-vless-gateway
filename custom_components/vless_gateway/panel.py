@@ -3,12 +3,13 @@
 from __future__ import annotations
 
 from pathlib import Path
+import asyncio
 
 from homeassistant.components import frontend, panel_custom
 from homeassistant.components.http import StaticPathConfig
 from homeassistant.core import HomeAssistant
 
-from .const import DOMAIN, PANEL_UI_VERSION
+from .const import DOMAIN, PANEL_UI_VERSION, INTEGRATION_VERSION
 
 PANEL_ID = "vless-gateway"
 PANEL_TITLE = "VLESS Gateway"
@@ -31,6 +32,7 @@ PANEL_METADATA = {
     "owner": DOMAIN,
     "preferred_view": "overview",
     "ui_version": PANEL_UI_VERSION,
+    "integration_version": INTEGRATION_VERSION,
     "template_version": PANEL_TEMPLATE_VERSION,
     "frontend_bundle": PANEL_BUNDLE,
     "read_only": True,
@@ -47,30 +49,38 @@ PANEL_METADATA = {
 }
 
 
-async def async_register_panel(hass: HomeAssistant) -> None:
+async def async_register_panel(hass: HomeAssistant, entity_roles=None) -> None:
     """Register the VLESS Gateway panel and static frontend."""
     domain_data = hass.data.setdefault(DOMAIN, {})
-    if not domain_data.get(PANEL_STATIC_REGISTERED):
-        await hass.http.async_register_static_paths(
-            [StaticPathConfig(PANEL_STATIC_URL, str(PANEL_DIRECTORY), cache_headers=False)]
+    lock = domain_data.setdefault("panel_lock", asyncio.Lock())
+    roles = dict(entity_roles or {})
+    async with lock:
+        if not domain_data.get(PANEL_STATIC_REGISTERED):
+            await hass.http.async_register_static_paths(
+                [
+                    StaticPathConfig(
+                        PANEL_STATIC_URL, str(PANEL_DIRECTORY), cache_headers=False
+                    )
+                ]
+            )
+            domain_data[PANEL_STATIC_REGISTERED] = True
+        if frontend.async_panel_exists(hass, PANEL_URL_PATH):
+            if domain_data.get("panel_roles") == roles:
+                return
+            frontend.async_remove_panel(hass, PANEL_URL_PATH, warn_if_unknown=False)
+        await panel_custom.async_register_panel(
+            hass=hass,
+            frontend_url_path=PANEL_URL_PATH,
+            webcomponent_name=PANEL_WEB_COMPONENT,
+            sidebar_title=PANEL_TITLE,
+            sidebar_icon=PANEL_ICON,
+            module_url=f"{PANEL_STATIC_URL}/{PANEL_BUNDLE}?v={PANEL_UI_VERSION}",
+            embed_iframe=False,
+            require_admin=False,
+            handle_safe_area=True,
+            config={**PANEL_METADATA, "entity_roles": roles},
         )
-        domain_data[PANEL_STATIC_REGISTERED] = True
-
-    if frontend.async_panel_exists(hass, PANEL_URL_PATH):
-        return
-
-    await panel_custom.async_register_panel(
-        hass=hass,
-        frontend_url_path=PANEL_URL_PATH,
-        webcomponent_name=PANEL_WEB_COMPONENT,
-        sidebar_title=PANEL_TITLE,
-        sidebar_icon=PANEL_ICON,
-        module_url=f"{PANEL_STATIC_URL}/{PANEL_BUNDLE}?v={PANEL_UI_VERSION}",
-        embed_iframe=False,
-        require_admin=False,
-        handle_safe_area=True,
-        config=PANEL_METADATA,
-    )
+        domain_data["panel_roles"] = roles
 
 
 def async_unregister_panel(hass: HomeAssistant) -> None:

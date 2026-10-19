@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.0-beta001
+
+- Added read-only gateway API v1, connection/reauth/reconfigure flow and 15-second coordinator.
+- Added 19 factual HA roles mapped from registered sensor IDs; stale/unavailable values stay unavailable.
+- Kept tokens in config entries and read-only controls disabled; gateway credentials never enter the panel.
+- Displayed full UI/integration beta versions and retained the current shell/navigation.
+- Added real Home Assistant coordinator, flow and entity setup tests; retained separate bench/phone acceptance.
+
 All notable project changes are recorded here.
 
 ## [Unreleased]

@@ -49,7 +49,7 @@ class FrontendContractTests(unittest.TestCase):
         self.assertIsNone(re.search(r"^\s*(?:import|export)\b", executable, re.MULTILINE))
         self.assertNotRegex(executable, r"\bimport\s*\(")
         self.assertIn('customElements.define("vless-gateway-panel"', self.bundle)
-        self.assertIn("0.1.2", self.bundle)
+        self.assertIn("1.0.0-beta001", self.bundle)
         self.assertIn('const NIKAS_SHELL_V2_VERSION = "2.1"', self.bundle)
 
     def test_navigation_contract_is_parent_only(self) -> None:

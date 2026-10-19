@@ -15,9 +15,9 @@ class SpecializedPanelReadinessTests(unittest.TestCase):
     def setUpClass(cls) -> None:
         cls.contract = json.loads(CONTRACT.read_text(encoding="utf-8"))
 
-    def test_installable_scaffold_is_declared_truthfully(self) -> None:
+    def test_read_only_consumer_is_declared_truthfully(self) -> None:
         self.assertEqual(self.contract["standard_version"], "2.2")
-        self.assertEqual(self.contract["repository_state"], "installable_panel_scaffold")
+        self.assertEqual(self.contract["repository_state"], "read_only_gateway_api_v1")
         self.assertTrue(self.contract["integration"]["present"])
         self.assertTrue(self.contract["integration"]["config_flow_present"])
         self.assertTrue(self.contract["panel"]["runtime_present"])

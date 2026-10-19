@@ -18,7 +18,7 @@
     "custom_components/vless_gateway/frontend/src/zoom-controller.js",
     "custom_components/vless_gateway/frontend/src/vless-gateway-panel.js"
   ],
-  "ui_version": "0.1.2",
+  "ui_version": "1.0.0-beta001",
   "web_component": "vless-gateway-panel",
   "bundle_contract": {
     "autonomous": true,

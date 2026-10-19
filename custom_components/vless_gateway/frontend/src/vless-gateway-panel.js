@@ -4,7 +4,8 @@
 
 const VLESS_APP = {
   title: "VLESS Gateway",
-  uiVersion: "0.1.2",
+  uiVersion: "1.0.0-beta001",
+  integrationVersion: "1.0.0-beta001",
   domain: "vless_gateway",
   preferredView: "overview",
   tabs: [
@@ -37,7 +38,7 @@ function versionLine(value) {
     .trim()
     .replace(/^UI\s+v/i, "")
     .replace(/^v/i, "");
-  return /^\d+\.\d+\.\d+$/.test(normalized)
+  return /^\d+\.\d+\.\d+(?:-beta\d{3})?$/.test(normalized)
     ? `UI v${normalized}`
     : `UI v${VLESS_APP.uiVersion}`;
 }
@@ -174,7 +175,7 @@ class VlessGatewayPanel extends HTMLElement {
       : VLESS_APP.tabs;
     return {
       title: this._panel?.config?.title || VLESS_APP.title,
-      versionLine: versionLine(this._panel?.config?.ui_version || VLESS_APP.uiVersion),
+      versionLine: `${versionLine(this._panel?.config?.ui_version || VLESS_APP.uiVersion)} · HA v${this._panel?.config?.integration_version || VLESS_APP.integrationVersion}`,
       tabs: tabs.length >= 3 ? tabs : VLESS_APP.tabs,
     };
   }
