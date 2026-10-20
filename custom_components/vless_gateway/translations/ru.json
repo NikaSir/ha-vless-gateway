@@ -3,12 +3,42 @@
   "config": {
     "step": {
       "user": {
-        "title": "Панель VLESS Gateway",
-        "description": "Добавить read-only заготовку панели VLESS Gateway. Телеметрия и команды появятся только после утверждения API шлюза."
+        "title": "Подключение VLESS Gateway",
+        "description": "Укажите управляющий адрес NanoPi и отдельный токен API. HTTP разрешается только для явно доверенной частной управляющей сети.",
+        "data": {
+          "base_url": "Адрес шлюза",
+          "api_token": "Токен read-only API",
+          "allow_http": "Разрешить HTTP в доверенной частной сети"
+        }
+      },
+      "reconfigure": {
+        "title": "Подключение VLESS Gateway",
+        "description": "Укажите управляющий адрес NanoPi и отдельный токен API. HTTP разрешается только для явно доверенной частной управляющей сети.",
+        "data": {
+          "base_url": "Адрес шлюза",
+          "api_token": "Токен read-only API",
+          "allow_http": "Разрешить HTTP в доверенной частной сети"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Подключение VLESS Gateway",
+        "description": "Укажите управляющий адрес NanoPi и отдельный токен API. HTTP разрешается только для явно доверенной частной управляющей сети.",
+        "data": {
+          "base_url": "Адрес шлюза",
+          "api_token": "Токен read-only API",
+          "allow_http": "Разрешить HTTP в доверенной частной сети"
+        }
       }
     },
+    "error": {
+      "invalid_auth": "Токен API отклонён шлюзом.",
+      "cannot_connect": "Не удалось подключиться. Проверьте адрес, доступ и разрешение HTTP.",
+      "unsupported_schema": "Версия или структура API не поддерживается."
+    },
     "abort": {
-      "already_configured": "Панель VLESS Gateway уже добавлена."
+      "already_configured": "VLESS Gateway уже добавлен.",
+      "reconfigure_successful": "Подключение обновлено.",
+      "reauth_successful": "Авторизация обновлена."
     }
   }
 }

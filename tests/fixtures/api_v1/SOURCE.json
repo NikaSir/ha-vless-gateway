@@ -1,0 +1,17 @@
+{
+  "repository": "NikaSir/vless-gateway",
+  "commit": "20206a6fd3a951aadd527af2a92a061681199227",
+  "schema_version": "1",
+  "status": "immutable bench-candidate contract; not a release tag",
+  "generated_observations": {
+    "fixtures": [
+      "status-confirmed-change.json",
+      "status-selector-unconfirmed.json",
+      "status-direct-tunnel-failed.json"
+    ],
+    "generator": "internal/controller/review_regression_test.go:TestAuthoritativeStatusContractFixtures",
+    "branch": "feature/nanopi-r5s-gateway-v1",
+    "status": "controller snapshots; paired byte-for-byte with gateway contract fixtures",
+    "commit": "3874fc7be5d4b144e42778a25d00cfcf719592b3"
+  }
+}

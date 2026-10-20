@@ -20,7 +20,10 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v7
         with:
-          python-version: "3.13"
+          python-version: "3.14"
+
+      - name: Install Home Assistant test runtime
+        run: python -m pip install -r requirements.test.txt
 
       - name: Set up Node.js
         uses: actions/setup-node@v7
@@ -56,6 +59,9 @@ jobs:
 
       - name: Verify integration and specialized-panel contracts
         run: python -m unittest discover -s tests -v
+
+      - name: Verify coordinator, config flow and real entity setup
+        run: python -m pytest -q tests/test_coordinator.py tests/test_config_flow.py tests/test_setup.py
 
       - name: Enforce NikaS UI standard v2.2
         run: python scripts/check_nikas_ui_standard.py

@@ -26,6 +26,9 @@ SOURCE = (
 
 
 class FrontendContractTests(unittest.TestCase):
+    def test_traffic_scope_and_gateway_state_labels(self):
+        subprocess.run(["node", "tests/telemetry_display.mjs"], cwd=ROOT, check=True)
+
     @classmethod
     def setUpClass(cls) -> None:
         cls.bundle = BUNDLE.read_text(encoding="utf-8")
@@ -49,7 +52,7 @@ class FrontendContractTests(unittest.TestCase):
         self.assertIsNone(re.search(r"^\s*(?:import|export)\b", executable, re.MULTILINE))
         self.assertNotRegex(executable, r"\bimport\s*\(")
         self.assertIn('customElements.define("vless-gateway-panel"', self.bundle)
-        self.assertIn("0.1.2", self.bundle)
+        self.assertIn("1.0.0-beta001", self.bundle)
         self.assertIn('const NIKAS_SHELL_V2_VERSION = "2.1"', self.bundle)
 
     def test_navigation_contract_is_parent_only(self) -> None:

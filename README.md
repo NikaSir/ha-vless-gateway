@@ -4,14 +4,14 @@
   <img src="assets/icon.png" width="180" alt="VLESS Gateway repository icon">
 </p>
 
-Installable read-only panel scaffold for the separate **VLESS Gateway** project.
+Read-only API v1 integration and panel for the separate **VLESS Gateway** project on NanoPi R5S.
 
 ## Status
 
-- Integration version: `0.1.2`.
-- Panel UI version: `0.1.1`.
+- Integration version: `1.0.0-beta001`.
+- Panel UI version: `1.0.0-beta001`.
 - Home Assistant route: `/dashboard-vless-gateway`.
-- Parent section: **Инфраструктура** (`/dashboard-infrastructure/overview`).
+- Parent route: `/home/overview`.
 - Views: **Обзор**, **Маршруты**, **Трафик**, **Диагн.**
 - Commands: disabled until the gateway API and safe write contract are verified.
 
@@ -26,7 +26,7 @@ This repository owns:
 - entity-role and diagnostics presentation contracts;
 - HACS metadata, tests and panel documentation.
 
-The gateway operating system, routing/VLESS implementation, Raspberry Pi provisioning, Xray/sing-box, systemd and firewall belong in **`NikaSir/vless-gateway`** and must not be duplicated here.
+The NanoPi OS, routing/VLESS implementation, sing-box, procd and firewall belong in **`NikaSir/vless-gateway`** and must not be duplicated here.
 
 No gateway credentials, private keys, UUIDs, access tokens, server addresses or production network secrets may be committed.
 
@@ -51,9 +51,11 @@ See [`docs/VLESS_GATEWAY_PANEL.md`](docs/VLESS_GATEWAY_PANEL.md) for the reserve
 1. Add `https://github.com/NikaSir/ha-vless-gateway` to HACS as a custom **Integration** repository.
 2. Install **VLESS Gateway** and restart Home Assistant.
 3. Open **Settings → Devices & services → Add integration → VLESS Gateway**.
-4. Open `/dashboard-vless-gateway`.
+4. Enter the management URL and independent read-only API token, then open `/dashboard-vless-gateway`.
 
-This first version does not require gateway credentials because it does not connect to the gateway API yet.
+HTTPS is preferred. HTTP requires explicit consent for a literal private management IP. Tokens stay in the HA config entry and never enter panel config, entity attributes or browser assets. Existing empty scaffold entries retain the panel and can be connected through Reconfigure.
+
+One coordinator polls status/routes/traffic/system/health every 15 seconds. Nineteen sensor/binary-sensor roles bind through actual HA registry IDs. Stale/unavailable values are unavailable; a factual zero remains zero. There are no write entities/services. The header shows full UI and integration versions.
 
 ## Development checks
 
@@ -62,10 +64,13 @@ node scripts/build-frontend-bundle.mjs --check
 node --check custom_components/vless_gateway/frontend/vless-gateway-panel.js
 node tests/shell_v2_harness.mjs
 python -m unittest discover -s tests -v
+python -m pytest -q tests/test_coordinator.py tests/test_config_flow.py tests/test_setup.py
 python scripts/check_nikas_ui_standard.py
 ```
 
 ## Repository policy
+
+Runtime tests use Python 3.14, Home Assistant 2026.10.0 and requirements.test.txt. The gateway contract source is recorded in tests/fixtures/api_v1/SOURCE.json. Actual device, soak and phone acceptance remain required.
 
 - Default branch: `main`.
 - GitHub Releases and automatic release tags are not used.
