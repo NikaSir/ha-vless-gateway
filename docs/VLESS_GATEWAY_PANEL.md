@@ -56,3 +56,7 @@ node --check custom_components/vless_gateway/frontend/vless-gateway-panel.js
 ```
 
 The production module is a single autonomous bundle. The vendored Shell v2.1 source kit and the other files under `frontend/src` are build inputs only and are never imported at runtime.
+
+## Authoritative gateway observations (beta001 review repair)
+
+The integration passes through gateway API v1 observations: confirmed DIRECT with failed VLESS paths reports tunnel off; an unconfirmed selector reports route/tunnel unavailable. A rejected mode request leaves the last confirmed route-change timestamp unchanged. No HA-side connectivity or change timestamp is inferred. Paired controller-generated fixtures and role/rendered-panel tests cover these cases; this is repository evidence, not live gateway or HA acceptance.

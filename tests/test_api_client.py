@@ -2,6 +2,7 @@ from importlib.util import module_from_spec, spec_from_file_location
 from pathlib import Path
 import json
 import unittest
+import pytest
 from aiohttp import web, ClientSession
 
 path = Path(__file__).resolve().parents[1] / "custom_components/vless_gateway/api.py"
@@ -11,6 +12,7 @@ spec.loader.exec_module(api)
 
 
 class ClientTests(unittest.IsolatedAsyncioTestCase):
+    @pytest.mark.usefixtures("socket_enabled")
     async def test_authenticated_read_only_and_schema_errors(self):
         async def handler(request):
             self.assertEqual(request.method, "GET")

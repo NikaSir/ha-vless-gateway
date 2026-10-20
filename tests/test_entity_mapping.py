@@ -1,4 +1,5 @@
 import importlib.util
+import json
 from pathlib import Path
 import unittest
 
@@ -67,3 +68,26 @@ class MappingTests(unittest.TestCase):
         self.assertEqual(roles.role_value(data, "default_route"), "de")
         self.assertEqual(roles.role_value(data, "latency"), 40)
         self.assertIsNone(roles.role_value(data, "traffic_month"))
+
+
+class AuthoritativeGatewayObservationTests(unittest.TestCase):
+    def fixture(self, name):
+        return json.loads((Path(__file__).parent / "fixtures/api_v1" / f"{name}.json").read_text())
+
+    def test_direct_after_vless_failure_reports_tunnel_off(self):
+        data = {"status": self.fixture("status-direct-tunnel-failed")}
+        self.assertEqual(roles.role_value(data, "active_route"), "direct")
+        self.assertIs(roles.role_value(data, "tunnel_status"), False)
+        self.assertEqual(roles.role_value(data, "gateway_status"), "degraded_fail_open")
+        self.assertIsNone(roles.role_value(data, "last_route_change"))
+
+    def test_rejected_selection_keeps_confirmed_change_without_inventing_route(self):
+        before = {"status": self.fixture("status-confirmed-change")}
+        after = {"status": self.fixture("status-selector-unconfirmed")}
+        self.assertIs(roles.role_value(before, "tunnel_status"), True)
+        self.assertEqual(roles.role_value(before, "active_route"), "de")
+        self.assertEqual(roles.role_value(after, "default_route"), "nl")
+        self.assertIsNone(roles.role_value(after, "active_route"))
+        self.assertIsNone(roles.role_value(after, "tunnel_status"))
+        self.assertEqual(roles.role_value(after, "last_route_change"), roles.role_value(before, "last_route_change"))
+        self.assertEqual(roles.role_value(after, "gateway_status"), "control_error")
